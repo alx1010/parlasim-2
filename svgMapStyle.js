@@ -5,12 +5,13 @@ var root = document.documentElement;
 // sets map style
 
 const baseFill = "#8a8a8a";
-const baseStrokeColour = "#363636";
+//const baseStrokeColour = "#363636";
+const baseStrokeColour = "black";
 const baseStrokeWidth = 0.5; // px
 
 const hoverFill = "#707070";
 
-const minStrokeWidth = 0.03; // px
+const minStrokeWidth = 0.05; // px
 
 var dyanmicStrokeWidth = baseStrokeWidth;
 
@@ -53,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
 root.addEventListener("wheel", (evt) => {
 	//dynamic stroke width
 
-	dyanmicStrokeWidth += evt.deltaY * 0.000075;
+	dyanmicStrokeWidth += evt.deltaY * 0.000085;
 
 	for (let x = 0; x < seats.length; x++) {
 		if (dyanmicStrokeWidth < minStrokeWidth) {

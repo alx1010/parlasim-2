@@ -1,29 +1,3 @@
-function readFile(file) {
-	var rawText = "";
-	var rawFile = new XMLHttpRequest();
-	rawFile.open("GET", file, false);
-	rawFile.onreadystatechange = function () {
-		if (rawFile.readyState === 4) {
-			// readyState = 4: request finished and response is ready
-			if (rawFile.status === 200) {
-				// status 200: "OK"
-				rawText = rawFile.responseText;
-			}
-		}
-	};
-	rawFile.send(null); //Sends the request to the server Used for GET requests with param null
-	return rawText;
-}
-
-function fillSeat(ID, colourHex) {
-	SVGMAP.getElementById(ID).style.fill = colourHex;
-}
-
-function fourDecRound(value) {
-	value = Math.round(value * 10000) / 10000;
-	return value;
-}
-
 var inputs = document.getElementsByClassName("input-input");
 
 for (let x = 0; x < inputs.length; x++) {
@@ -32,42 +6,61 @@ for (let x = 0; x < inputs.length; x++) {
 
 var data_raw = readFile("data.csv").split("\r").join("").split("\n").join(",").split(",");
 
-var seatName = [];
-var seatID = [];
-var pop_cnt = [];
+var seats = { name: [], id: [] };
 
-var lpc_vote = [];
-var cpc_vote = [];
-var ndp_vote = [];
-var grn_vote = [];
-var ppc_vote = [];
-var bqc_vote = [];
-var oth_vote = [];
+var vote = {};
+var vote_percent = {};
+
+var hex = { lpc: "#ea6d6a", cpc: "#6495ec", ndp: "#d17732", grn: "#10c25b", ppc: "#6f5d9a", bqc: "#19bfd2", oth: "#898989" };
 
 var total_votes = [];
 
-var parties = ["LPC", "CPC", "NDP", "GRN", "PPC", "BQC", "OTH"];
+var parties = ["lpc", "cpc", "ndp", "grn", "ppc", "bqc", "oth"];
 
-for (let x = 1; x < data_raw.length / 11; x++) {
-	seatName[x - 1] = data_raw[0 + x * 11];
-	seatID[x - 1] = data_raw[1 + x * 11];
+var seatWinner = [];
 
-	pop_cnt[x - 1] = parseInt(data_raw[10 + x * 11]);
-
-	lpc_vote[x - 1] = parseInt(data_raw[2 + x * 11]);
-	cpc_vote[x - 1] = parseInt(data_raw[3 + x * 11]);
-
-	total_votes[x - 1] = parseInt(data_raw[9 + x * 11]);
+for (let y = 0; y < parties.length; y++) {
+	Object.defineProperty(vote, parties[y], {
+		value: [],
+		writable: true,
+		enumerable: true,
+		configurable: true,
+	});
+	Object.defineProperty(vote_percent, parties[y], {
+		value: [],
+		writable: true,
+		enumerable: true,
+		configurable: true,
+	});
 }
 
-for (x = 0; x < 343; x++) {
-	lpc_vote[x] = lpc_vote[x] / total_votes[x];
+// 11 columns, removes header line
 
-	lpc_vote[x] = fourDecRound(lpc_vote[x]);
+data_raw = data_raw.slice(11, data_raw.length);
 
-	cpc_vote[x] = cpc_vote[x] / total_votes[x];
+for (let x = 0; x < data_raw.length / 11; x++) {
+	seats.name[x] = data_raw[0 + x * 11];
+	seats.id[x] = data_raw[1 + x * 11];
 
-	cpc_vote[x] = fourDecRound(cpc_vote[x]);
+	for (let y = 0; y < parties.length; y++) {
+		vote[parties[y]][x] = parseInt(data_raw[2 + y + x * 11]);
+	}
+
+	total_votes[x] = parseInt(data_raw[9 + x * 11]);
+}
+
+for (x = 0; x < seats.id.length; x++) {
+	Object.keys(vote_percent).forEach((key) => {
+		vote_percent[key][x] = vote[key][x] / total_votes[x];
+		vote_percent[key][x] = fourDecRound(vote_percent[key][x]);
+	});
+	var max = 0;
+	Object.keys(vote_percent).forEach((key) => {
+		if (vote_percent[key][x] > max) {
+			max = vote_percent[key][x];
+			seatWinner[x] = key;
+		}
+	});
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -83,38 +76,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		SVGMAP = svgDoc.documentElement;
 
-		var top = 0.7;
+		for (let x = 0; x < seats.id.length; x++) {
+			var val = Math.ceil((rangeTop - vote_percent[seatWinner[x]][x]) / decrement);
+			fillSeat(seats.id[x], shadeColor(hex[seatWinner[x]], val * ((maxShade - minShade) / bucketNum) + minShade));
 
-		var bot = 0.2;
-
-		var decrement = 0.05;
-
-		var bucketNum = Math.round((top - bot) / decrement);
-
-		var hex = "#ea6d6a";
-
-		var minShade = -60;
-		var maxShade = 60;
-
-		for (let x = 0; x < seatID.length; x++) {
-			var val = Math.ceil((top - lpc_vote[x]) / decrement);
-
-			fillSeat(seatID[x], shadeColor(hex, val * ((maxShade - minShade) / bucketNum) + minShade));
-
-			if (lpc_vote[x] > top) {
-				fillSeat(seatID[x], shadeColor(hex, minShade));
+			if (vote_percent[seatWinner[x]][x] > rangeTop) {
+				fillSeat(seats.id[x], shadeColor(hex[seatWinner[x]], minShade));
+			} else if (vote_percent[seatWinner[x]][x] < rangeBottom) {
+				fillSeat(seats.id[x], shadeColor(hex[seatWinner[x]], maxShade + (maxShade - minShade) / bucketNum));
 			}
-			if (lpc_vote[x] < bot) {
-				fillSeat(seatID[x], shadeColor(hex, maxShade));
+			if (vote_percent[seatWinner[x]][x] == 0) {
+				fillSeat(seats.id[x], "#8a8a8a");
 			}
 		}
 
-		var t = document.getElementById("fr-box-top").querySelectorAll("p");
+		var e = document.getElementsByClassName("seatVote");
 
-		for (let x = 0; x < 343; x++) {
-			SVGMAP.getElementById(seatID[x]).addEventListener("click", () => {
-				t[4].innerText = fourDecRound(lpc_vote[x] * 100) + "%";
-				t[5].innerText = fourDecRound(cpc_vote[x] * 100) + "%";
+		for (let x = 0; x < seats.id.length; x++) {
+			SVGMAP.getElementById(seats.id[x]).addEventListener("click", () => {
+				document.getElementById("SeatName").innerText = seats.name[x];
+
+				for (let z = 0; z < parties.length; z++) {
+					e[z].innerText = fourDecRound(vote_percent[parties[z]][x] * 100).toFixed(2) + "%";
+				}
 			});
 		}
 	});

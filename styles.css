@@ -144,7 +144,7 @@ body {
 .box-button {
 	height: 80%;
 	width: 90%;
-	font-size: 0.7vw;
+	font-size: 0.6vw;
 	background-color: grey;
 	border-style: outset;
 	border-color: rgb(63, 63, 63);
@@ -154,7 +154,6 @@ body {
 }
 
 .box-button:active {
-	font-size: 0.8vw;
 	background-color: rgb(78, 78, 78);
 	border-style: outset;
 	border-color: rgb(32, 32, 32);
@@ -191,6 +190,7 @@ body {
 #fr-box-top > p {
 	font-size: 0.8vw;
 	color: var(--font-colour);
+	text-align: center;
 }
 
 .heading-text {
@@ -202,7 +202,7 @@ body {
 #detailed-data-table {
 	display: grid;
 	grid-template-columns: repeat(8, auto);
-	grid-template-rows: repeat(7, auto);
+	grid-template-rows: repeat(8, auto);
 	justify-items: center;
 	width: 90%;
 	height: 100%;

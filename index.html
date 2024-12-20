@@ -18,7 +18,7 @@
 						<p>GRN</p>
 						<p>PPC</p>
 						<p>BQC</p>
-						<p>Other</p>
+						<p>OTH</p>
 						<p class="pv-text">##.#%</p>
 						<p class="pv-text">##.#%</p>
 						<p class="pv-text">##.#%</p>
@@ -42,7 +42,7 @@
 						<p>GRN</p>
 						<p>PPC</p>
 						<p>BQC</p>
-						<p>Other</p>
+						<p>OTH</p>
 						<p>BC</p>
 						<input type="input" class="input-input"></input>
 						<input type="input" class="input-input"></input>
@@ -103,8 +103,8 @@
 						<p>NDP</p>
 						<p>GRN</p>
 						<p>PPC</p>
-						<p>Bloc</p>
-						<p>Other</p>
+						<p>BQC</p>
+						<p>OTH</p>
 						<p>BC</p>
 						<p>###</p>
 						<p>###</p>
@@ -159,21 +159,21 @@
 			</div>
 			<div id="wrapper-right">
 				<div id="fr-box-top">
-					<p style="grid-area: 1 / 1 / 1 / 4">~~~~~~~~~ (SEAT NAME)</p>
+					<p id="SeatName" style="grid-area: 1 / 1 / 1 / 4">~~~~~~~~~ (SEAT NAME)</p>
 					<p>LPC</p>
 					<p>CPC</p>
 					<p>NDP</p>
-					<p>~~.~%</p>
-					<p>~~.~%</p>
-					<p>~~.~%</p>
+					<p class="seatVote">~~.~%</p>
+					<p class="seatVote">~~.~%</p>
+					<p class="seatVote">~~.~%</p>
 					<p>GRN</p>
 					<p>PPC</p>
-					<p>Bloc</p>
-					<p>~~.~%</p>
-					<p>~~.~%</p>
-					<p>~~.~%</p>
-					<p style="grid-area: 6 / 1 / 6 / 4">Other</p>
-					<p style="grid-area: 7 / 1 / 7 / 4">~~.~%</p>
+					<p>BQC</p>
+					<p class="seatVote">~~.~%</p>
+					<p class="seatVote">~~.~%</p>
+					<p class="seatVote">~~.~%</p>
+					<p style="grid-area: 6 / 1 / 6 / 4">OTH</p>
+					<p class="seatVote" style="grid-area: 7 / 1 / 7 / 4">~~.~%</p>
 					<p style="grid-area: 8 / 1 / 8 / 4">PRTY FLIP / HOLD</p>
 				</div>
 				<div id="fr-box-bottom">
@@ -185,16 +185,21 @@
 					<button class="box-button">Winner by Share</button>
 					<button class="box-button">Flips</button>
 					<button class="box-button">Solid Colour</button>
-					<p style="grid-area: 6 / 1 / 6 / 3">Other</p>
+					<button id="btnPartyStrength" class="box-button" style="grid-area: 6 / 1 / 6 / 3; width: 95%;">Vote Strength By Party (Cycle)</button>
+					<p style="grid-area: 7 / 1 / 7 / 3">Miscellaneous</p>
 					<button class="box-button">Current Averages</button>
 					<button class="box-button">LPC Upper Bound</button>
 					<button class="box-button">CPC Upper Bound</button>
+					<button class="box-button">NDP Upper Bound</button>
 					<button class="box-button">Export to SVG</button>
+					<button class="box-button">Adjust Colours</button>
 				</div>
 			</div>
 		</div>
-		<script src="shadeColor.js"></script>
+		<script src="/modules/shadeColor.js"></script>
+		<script src="globalDeclarations.js"></script>
 		<script src="script.js"></script>
+		<script src="buttonScript.js"></script>
 	</head>
 	<body></body>
 </html>
