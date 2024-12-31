@@ -11,13 +11,15 @@ var seats = { name: [], id: [] };
 var vote = {};
 var vote_percent = {};
 
-var hex = { lpc: "#ea6d6a", cpc: "#6495ec", ndp: "#d17732", grn: "#10c25b", ppc: "#6f5d9a", bqc: "#19bfd2", oth: "#898989" };
+var hex = { lpc: "#ea6d6a", cpc: "#6495ec", ndp: "#EF7C01", grn: "#10c25b", ppc: "#6f5d9a", bqc: "#19bfd2", oth: "#898989" };
 
 var total_votes = [];
 
 var parties = ["lpc", "cpc", "ndp", "grn", "ppc", "bqc", "oth"];
 
 var seatWinner = [];
+
+var seatMargin = [];
 
 for (let y = 0; y < parties.length; y++) {
 	Object.defineProperty(vote, parties[y], {
@@ -54,13 +56,24 @@ for (x = 0; x < seats.id.length; x++) {
 		vote_percent[key][x] = vote[key][x] / total_votes[x];
 		vote_percent[key][x] = fourDecRound(vote_percent[key][x]);
 	});
+
 	var max = 0;
+	var secondMax = 0;
+
 	Object.keys(vote_percent).forEach((key) => {
 		if (vote_percent[key][x] > max) {
 			max = vote_percent[key][x];
 			seatWinner[x] = key;
 		}
 	});
+
+	Object.keys(vote_percent).forEach((key) => {
+		if (vote_percent[key][x] > secondMax && vote_percent[key][x] != max) {
+			secondMax = vote_percent[key][x];
+		}
+	});
+
+	seatMargin[x] = fourDecRound(max - secondMax);
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -78,12 +91,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		for (let x = 0; x < seats.id.length; x++) {
 			var val = Math.ceil((rangeTop - vote_percent[seatWinner[x]][x]) / decrement);
-			fillSeat(seats.id[x], shadeColor(hex[seatWinner[x]], val * ((maxShade - minShade) / bucketNum) + minShade));
+
+			fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, val - 5));
 
 			if (vote_percent[seatWinner[x]][x] > rangeTop) {
-				fillSeat(seats.id[x], shadeColor(hex[seatWinner[x]], minShade));
+				fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, -5));
 			} else if (vote_percent[seatWinner[x]][x] < rangeBottom) {
-				fillSeat(seats.id[x], shadeColor(hex[seatWinner[x]], maxShade + (maxShade - minShade) / bucketNum));
+				fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, 5));
 			}
 			if (vote_percent[seatWinner[x]][x] == 0) {
 				fillSeat(seats.id[x], "#8a8a8a");
@@ -103,3 +117,25 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	});
 });
+
+var pv = [];
+
+var p = 0;
+
+Object.keys(vote).forEach((key) => {
+	pv[p] = vote[key].reduce((a, b) => a + b, 0);
+	p++;
+});
+
+var p = 0;
+
+Object.keys(vote).forEach((key) => {
+	pv[p] = fourDecRound(pv[p] / total_votes.reduce((a, b) => a + b, 0));
+	p++;
+});
+
+var pvText = document.getElementsByClassName("pvVote");
+
+for (let p = 0; p < parties.length; p++) {
+	pvText[p].innerText = fourDecRound(pv[p] * 100) + "%";
+}

@@ -32,8 +32,3 @@ var decrement = 0.05;
 // Treating each section as a bucket helps visualize pieces
 
 var bucketNum = Math.round((rangeTop - rangeBottom) / decrement);
-
-// Range of shades in percentage terms
-
-var minShade = -60;
-var maxShade = 60;
