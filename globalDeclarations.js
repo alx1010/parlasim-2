@@ -24,6 +24,11 @@ function fourDecRound(value) {
 	return value;
 }
 
+function parsePercentage(value) {
+	value = fourDecRound(parseFloat(value) / 100);
+	return value;
+}
+
 var rangeTop = 0.7;
 var rangeBottom = 0.2;
 

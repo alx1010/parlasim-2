@@ -18,7 +18,7 @@ body {
 	padding: 0 1vw;
 	box-sizing: border-box;
 	display: flex;
-	gap: 5vw;
+	gap: 3vw;
 	align-items: center;
 	background-color: var(--box-colour);
 	border-style: dashed;
@@ -130,7 +130,7 @@ body {
 #pv-table {
 	display: grid;
 	grid-template-columns: repeat(7, auto);
-	grid-template-rows: repeat(2, auto);
+	grid-template-rows: repeat(3, auto);
 	justify-items: center;
 	width: 70%;
 }
@@ -139,15 +139,16 @@ body {
 	font-size: 1vw;
 	font-weight: bold;
 	color: var(--font-colour);
+	height: 0.5vh;
 }
 
 .box-button {
 	height: 80%;
 	width: 90%;
 	font-size: 0.6vw;
-	background-color: grey;
+	background-color: rgb(88, 88, 88);
 	border-style: outset;
-	border-color: rgb(63, 63, 63);
+	border-color: rgb(73, 73, 73);
 	color: var(--font-colour);
 	font-weight: bold;
 	box-sizing: border-box;
@@ -155,8 +156,12 @@ body {
 
 .box-button:active {
 	background-color: rgb(78, 78, 78);
-	border-style: outset;
 	border-color: rgb(32, 32, 32);
+}
+
+.box-button:disabled {
+	background-color: rgb(100, 26, 26);
+	color: rgb(32, 9, 9);
 }
 
 #input-table {
@@ -183,8 +188,14 @@ body {
 	height: 25%;
 	font-size: 0.5vw;
 	background-color: rgb(88, 88, 88);
+	border-color: rgb(73, 73, 73);
+	border-style: outset;
 	color: var(--font-colour);
 	text-align: center;
+}
+
+#input-table > input:disabled {
+	background-color: rgb(99, 76, 76);
 }
 
 #fr-box-top > p {
