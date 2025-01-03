@@ -498,6 +498,7 @@ function GetShiftFromMOE(sel_p) {
 					shiftArr[inputPointer] = fourDecRound((scrapedRegions[parties[p]][r] - shiftArr[inputPointer]) / regionVotes[parties[p]][r]);
 				}
 			}
+			inputs[inputPointer].value = fourDecRound(fourDecRound(regionVotes[parties[p]][r] * shiftArr[inputPointer]) * 100).toFixed(2) + "%";
 		}
 	}
 
