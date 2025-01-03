@@ -267,6 +267,8 @@ function GetShiftFromInputs() {
 			} else {
 				shift[inputPointer] = fourDecRound(parsePercentage(inputs[inputPointer].value) / regionVotes[parties.abbreviation[p]][r]);
 			}
+
+			inputs[inputPointer].value = fourDecRound(fourDecRound(parsePercentage(inputs[inputPointer].value)) * 100).toFixed(2) + "%";
 		}
 	}
 	return shift;
