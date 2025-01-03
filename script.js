@@ -263,7 +263,7 @@ function GetShiftFromInputs() {
 			var inputPointer = parties.abbreviation.length * r + p;
 
 			if (regionVotes[parties.abbreviation[p]][r] == 0) {
-				shift[inputPointer] = 0;
+				shift[inputPointer] = 1;
 			} else {
 				shift[inputPointer] = fourDecRound(parsePercentage(inputs[inputPointer].value) / regionVotes[parties.abbreviation[p]][r]);
 			}
@@ -308,9 +308,41 @@ function Swing(shiftArr) {
 		running += regions.seats[r];
 	}
 
+	// janky fix for territories and their pv swing
+
+	var s = [];
+
+	for (let p = 0; p < parties.abbreviation.length; p++) {
+		s[p] = 0;
+	}
+
+	for (let r = 0; r < regionsWithRegionalSwing; r++) {
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			var inputPointer = parties.abbreviation.length * r + p;
+
+			s[p] += shiftArr[inputPointer];
+		}
+	}
+
+	for (let p = 0; p < parties.abbreviation.length; p++) {
+		s[p] = fourDecRound(s[p] / regionsWithRegionalSwing);
+	}
+
+	for (let x = 340; x < seats.id.length; x++) {
+		var sum = 0;
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			v[p] = vote[parties.abbreviation[p]][x] * s[p];
+
+			sum += v[p];
+		}
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			vote_percent[parties.abbreviation[p]][x] = fourDecRound(v[p] / sum);
+		}
+	}
+
 	for (let x = 340; x < seats.id.length; x++) {
 		for (let p = 0; p < parties.abbreviation.length; p++) {
-			vpv[p] += vote[parties.abbreviation[p]][x];
+			vpv[p] += v[p];
 		}
 	}
 
@@ -318,21 +350,6 @@ function Swing(shiftArr) {
 
 	for (let p = 0; p < parties.abbreviation.length; p++) {
 		xvpv[p] = fourDecRound(vpv[p] / vpv.reduce((a, b) => a + b, 0));
-	}
-
-	for (let x = 340; x < seats.id.length; x++) {
-		var sum = 0;
-
-		for (let p = 0; p < parties.abbreviation.length; p++) {
-			var shift = fourDecRound(xvpv[p] / pv[p]);
-
-			v[p] = Math.round(vote[parties.abbreviation[p]][x] * shift);
-			sum += v[p];
-		}
-
-		for (let p = 0; p < parties.abbreviation.length; p++) {
-			vote_percent[parties.abbreviation[p]][x] = fourDecRound(v[p] / sum);
-		}
 	}
 
 	findWinnerAndMargin();
