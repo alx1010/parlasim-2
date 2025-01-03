@@ -4,6 +4,8 @@ const btnByShare = document.getElementById("btnByShare");
 const btnByMargin = document.getElementById("btnByMargin");
 const btnPartyStrength = document.getElementById("btnPartyStrength");
 
+const btnAverages = document.getElementById("btnAverages");
+
 btnByShare.addEventListener("click", () => {
 	for (let x = 0; x < seats.id.length; x++) {
 		var val = Math.ceil((rangeTop - vote_percent[seatWinner[x]][x]) / decrement);
@@ -64,5 +66,11 @@ btnPartyStrength.addEventListener("click", () => {
 });
 
 btnSim.addEventListener("click", () => {
-	Swing();
+	var shiftArr = GetShiftFromInputs();
+	Swing(shiftArr);
+});
+
+btnAverages.addEventListener("click", () => {
+	var shiftArr = ParseScrape();
+	Swing(shiftArr);
 });

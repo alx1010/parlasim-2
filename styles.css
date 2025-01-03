@@ -15,8 +15,7 @@ body {
 }
 
 #head {
-	padding: 0 1vw;
-	box-sizing: border-box;
+	padding: 1.5vh 1vw;
 	display: flex;
 	gap: 3vw;
 	align-items: center;
@@ -132,14 +131,16 @@ body {
 	grid-template-columns: repeat(7, auto);
 	grid-template-rows: repeat(3, auto);
 	justify-items: center;
+	align-items: center;
 	width: 70%;
+	gap: 0.8vw;
 }
 
 #pv-table > p {
+	margin: 0 0;
 	font-size: 1vw;
 	font-weight: bold;
 	color: var(--font-colour);
-	height: 0.5vh;
 }
 
 .box-button {
@@ -205,6 +206,7 @@ body {
 }
 
 .heading-text {
+	margin: 10% 0;
 	font-size: 1.5vw;
 	font-weight: bold;
 	color: var(--font-colour);

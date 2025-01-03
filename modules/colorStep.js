@@ -26,15 +26,16 @@ function colourStep(hex, stepDistance, step) {
 		});
 	}
 
+	function componentToHex(c) {
+		var h = c.toString(16);
+		return h.length == 1 ? "0" + h : h;
+	}
+
 	Object.keys(initialColour).forEach((key) => {
 		newShade[key] = initialColour[key] + change[key] * step;
 		newShade[key] = Math.round(newShade[key]);
 
-		if (newShade[key] < 10) {
-			newHex = newHex + "0" + newShade[key].toString();
-		} else {
-			newHex = newHex + newShade[key].toString(16);
-		}
+		newHex = newHex + componentToHex(newShade[key]);
 	});
 
 	return "#" + newHex;

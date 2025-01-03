@@ -268,8 +268,26 @@ function IntializeRegionalSeatCounts() {
 
 // Grabbing new values for swing
 
-function Swing() {
-	var c = 0;
+function GetShiftFromInputs() {
+	var shift = [];
+
+	for (let r = 0; r < regionsWithRegionalSwing; r++) {
+		for (let p = 0; p < parties.length; p++) {
+			var inputPointer = parties.length * r + p;
+
+			if (regionVotes[parties[p]][r] == 0) {
+				shift[inputPointer] = 0;
+			} else {
+				shift[inputPointer] = fourDecRound(parsePercentage(inputs[inputPointer].value) / regionVotes[parties[p]][r]);
+			}
+		}
+	}
+	return shift;
+}
+
+// Apply shift array
+
+function Swing(shiftArr) {
 	var running = 0;
 
 	var vpv = [];
@@ -287,16 +305,10 @@ function Swing() {
 			for (let p = 0; p < parties.length; p++) {
 				var inputPointer = parties.length * r + p;
 
-				if (vote[parties[p]][x] == 0) {
-					v[p] = 0;
-				} else {
-					var shift = fourDecRound(parsePercentage(inputs[inputPointer].value) / regionVotes[parties[p]][r]);
+				v[p] = Math.round(vote[parties[p]][x] * shiftArr[inputPointer]);
 
-					v[p] = Math.round(vote[parties[p]][x] * shift);
-
-					sum += v[p];
-					vpv[p] += v[p];
-				}
+				sum += v[p];
+				vpv[p] += v[p];
 			}
 
 			for (let p = 0; p < parties.length; p++) {
@@ -320,9 +332,6 @@ function Swing() {
 	for (let p = 0; p < parties.length; p++) {
 		xvpv[p] = fourDecRound(vpv[p] / vpv.reduce((a, b) => a + b, 0));
 	}
-
-	console.log(xvpv);
-	console.log(pv);
 
 	for (let x = 340; x < seats.id.length; x++) {
 		var sum = 0;
@@ -399,4 +408,48 @@ function RefreshPopularVoteCount(arr) {
 	for (let p = 0; p < parties.length; p++) {
 		pvText[p].innerText = fourDecRound(arr[p] * 100) + "%";
 	}
+}
+
+function ParseScrape() {
+	var shiftArr = [];
+
+	var scrapedRegions = {};
+
+	for (let p = 0; p < parties.length; p++) {
+		Object.defineProperty(scrapedRegions, parties[p], {
+			value: [],
+			writable: true,
+			enumerable: true,
+			configurable: true,
+		});
+		for (let r = 0; r < regions.name.length; r++) {
+			scrapedRegions[parties[p]][r] = regionVotes[parties[p]][r];
+		}
+	}
+
+	for (let r = 0; r < regionsWithRegionalSwing; r++) {
+		filename = "/selenium-averages/scrape_" + regions.name[r] + ".txt";
+
+		var raw = readFile(filename);
+
+		arr = raw.split(",");
+
+		for (let p = 0; p < parties.length; p++) {
+			var inputPointer = parties.length * r + p;
+
+			for (let a = 0; a < arr.length; a++) {
+				if (arr[a] == parties[p]) {
+					scrapedRegions[parties[p]][r] = parseFloat(arr[a + 1]);
+				}
+			}
+
+			if (regionVotes[parties[p]][r] == 0) {
+				shiftArr[inputPointer] = 0;
+			} else {
+				shiftArr[inputPointer] = fourDecRound(scrapedRegions[parties[p]][r] / regionVotes[parties[p]][r]);
+			}
+		}
+	}
+
+	return shiftArr;
 }
