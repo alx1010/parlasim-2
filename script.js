@@ -478,6 +478,9 @@ function GetScrapeMOE() {
 
 			// 1000 acts as our n, where n is the average polling sample size
 
+			// MOE is calculated at 95% confidence level
+			// 1.96 is therefore z value
+
 			scrapeUpperMOE[parties[p]][r] = fourDecRound(1.96 * Math.sqrt((proportion * (1 - proportion)) / 1000));
 		}
 	}

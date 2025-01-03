@@ -8,6 +8,8 @@ const btnPartyStrength = document.getElementById("btnPartyStrength");
 
 const btnAverages = document.getElementById("btnAverages");
 
+const btnAdjustColours = document.getElementById("btnAdjustColours");
+
 btnByShare.addEventListener("click", () => {
 	for (let x = 0; x < seats.id.length; x++) {
 		var val = Math.ceil((rangeTop - vote_percent[seatWinner[x]][x]) / decrement);
@@ -84,10 +86,24 @@ btnAverages.addEventListener("click", () => {
 });
 
 for (let p = 0; p < 3; p++) {
-	var elem = document.getElementById(parties[p] + "UpperMOE");
+	var elem = document.getElementById("btn_" + parties[p] + "UpperMOE");
 
 	elem.addEventListener("click", () => {
 		var shiftArr = GetShiftFromMOE(p);
 		Swing(shiftArr);
 	});
 }
+
+btnAdjustColours.addEventListener("click", () => {
+	for (let p = 0; p < parties.length; p++) {
+		var promptResponse = window.prompt(parties[p] + "Colour", hex[parties[p]]);
+
+		console.log(promptResponse);
+
+		if (promptResponse == null) {
+		} else {
+			hex[parties[p]] = promptResponse;
+		}
+	}
+	RefreshMap();
+});
