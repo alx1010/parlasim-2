@@ -171,9 +171,8 @@ body {
 	grid-template-rows: repeat(6, auto);
 	justify-items: center;
 	align-items: center;
-	width: 90%;
+	width: 95%;
 	height: 100%;
-	gap: 1%;
 }
 
 #input-table > p {
@@ -185,7 +184,7 @@ body {
 }
 
 #input-table > input {
-	width: 65%;
+	width: 60%;
 	height: 25%;
 	font-size: 0.5vw;
 	background-color: rgb(88, 88, 88);
@@ -217,14 +216,15 @@ body {
 	grid-template-columns: repeat(8, auto);
 	grid-template-rows: repeat(8, auto);
 	justify-items: center;
-	width: 90%;
+	align-items: center;
+	width: 95%;
 	height: 100%;
 }
 
 #detailed-data-table > p {
 	width: 100%;
 	text-align: center;
-	font-size: 0.7vw;
+	font-size: 0.8vw;
 	color: var(--font-colour);
 }
 
