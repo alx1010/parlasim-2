@@ -2,6 +2,8 @@ const btnSim = document.getElementById("btnSim");
 
 const btnByShare = document.getElementById("btnByShare");
 const btnByMargin = document.getElementById("btnByMargin");
+const btnSolid = document.getElementById("btnSolid");
+
 const btnPartyStrength = document.getElementById("btnPartyStrength");
 
 const btnAverages = document.getElementById("btnAverages");
@@ -37,6 +39,12 @@ btnByMargin.addEventListener("click", () => {
 		if (seatMargin[x] == 0) {
 			fillSeat(seats.id[x], "#8a8a8a");
 		}
+	}
+});
+
+btnSolid.addEventListener("click", () => {
+	for (let x = 0; x < seats.id.length; x++) {
+		fillSeat(seats.id[x], hex[seatWinner[x]]);
 	}
 });
 
