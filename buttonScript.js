@@ -21,7 +21,7 @@ btnByMargin.addEventListener("click", () => {
 });
 
 btnSolid.addEventListener("click", () => {
-	mapMode = 2;
+	mapMode = 3;
 	ColourMap();
 });
 

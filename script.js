@@ -378,7 +378,7 @@ function ColourMap() {
 		}
 	}
 	if (mapMode == 2) {
-		// todo
+		// todo, flips
 	}
 	if (mapMode == 3) {
 		for (let x = 0; x < seats.id.length; x++) {
