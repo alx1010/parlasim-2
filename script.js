@@ -11,7 +11,18 @@ var total_votes = [];
 
 var hex = { lpc: "#ea6d6a", cpc: "#6495ec", ndp: "#EF7C01", grn: "#10c25b", ppc: "#6f5d9a", bqc: "#19bfd2", oth: "#898989" };
 
-var parties = ["lpc", "cpc", "ndp", "grn", "ppc", "bqc", "oth"];
+var parties = {
+	abbreviation: ["lpc", "cpc", "ndp", "grn", "ppc", "bqc", "oth"],
+	fullName: [
+		"Liberal Party of Canada",
+		"Conservative Party of Canada",
+		"New Democratic Party",
+		"Green Party",
+		"Peoples Party of Canada",
+		"Bloc Quebecois",
+		"Other",
+	],
+};
 
 var seatWinner = [];
 var seatMargin = [];
@@ -27,26 +38,26 @@ var regions = {
 var regionVotes = {};
 var regionSeats = {};
 
-for (let y = 0; y < parties.length; y++) {
-	Object.defineProperty(vote, parties[y], {
+for (let y = 0; y < parties.abbreviation.length; y++) {
+	Object.defineProperty(vote, parties.abbreviation[y], {
 		value: [],
 		writable: true,
 		enumerable: true,
 		configurable: true,
 	});
-	Object.defineProperty(vote_percent, parties[y], {
+	Object.defineProperty(vote_percent, parties.abbreviation[y], {
 		value: [],
 		writable: true,
 		enumerable: true,
 		configurable: true,
 	});
-	Object.defineProperty(regionVotes, parties[y], {
+	Object.defineProperty(regionVotes, parties.abbreviation[y], {
 		value: [],
 		writable: true,
 		enumerable: true,
 		configurable: true,
 	});
-	Object.defineProperty(regionSeats, parties[y], {
+	Object.defineProperty(regionSeats, parties.abbreviation[y], {
 		value: [],
 		writable: true,
 		enumerable: true,
@@ -62,8 +73,8 @@ for (let x = 0; x < electionDataRaw.length / 11; x++) {
 	seats.name[x] = electionDataRaw[0 + x * 11];
 	seats.id[x] = electionDataRaw[1 + x * 11];
 
-	for (let y = 0; y < parties.length; y++) {
-		vote[parties[y]][x] = parseInt(electionDataRaw[2 + y + x * 11]);
+	for (let y = 0; y < parties.abbreviation.length; y++) {
+		vote[parties.abbreviation[y]][x] = parseInt(electionDataRaw[2 + y + x * 11]);
 	}
 
 	total_votes[x] = parseInt(electionDataRaw[9 + x * 11]);
@@ -120,8 +131,8 @@ function ClickSeat(click) {
 
 	CurrentlyClickedSeat = click;
 
-	for (let z = 0; z < parties.length; z++) {
-		seatVoteText[z].innerText = fourDecRound(vote_percent[parties[z]][click] * 100).toFixed(2) + "%";
+	for (let z = 0; z < parties.abbreviation.length; z++) {
+		seatVoteText[z].innerText = fourDecRound(vote_percent[parties.abbreviation[z]][click] * 100).toFixed(2) + "%";
 	}
 }
 
@@ -133,14 +144,14 @@ function RefreshSeatClick() {
 
 var pv = [];
 
-for (let p = 0; p < parties.length; p++) {
-	pv[p] = vote[parties[p]].reduce((a, b) => a + b, 0);
+for (let p = 0; p < parties.abbreviation.length; p++) {
+	pv[p] = vote[parties.abbreviation[p]].reduce((a, b) => a + b, 0);
 	pv[p] = fourDecRound(pv[p] / total_votes.reduce((a, b) => a + b, 0));
 }
 
 var pvText = document.getElementsByClassName("pvVote");
 
-for (let p = 0; p < parties.length; p++) {
+for (let p = 0; p < parties.abbreviation.length; p++) {
 	pvText[p].innerText = fourDecRound(pv[p] * 100) + "%";
 }
 
@@ -149,11 +160,11 @@ for (let p = 0; p < parties.length; p++) {
 function DisplayNationalSeatCount() {
 	var natSeats = [];
 
-	for (let p = 0; p < parties.length; p++) {
+	for (let p = 0; p < parties.abbreviation.length; p++) {
 		natSeats[p] = 0;
 
 		for (let x = 0; x < seats.id.length; x++) {
-			if (seatWinner[x] == parties[p]) {
+			if (seatWinner[x] == parties.abbreviation[p]) {
 				natSeats[p]++;
 			}
 		}
@@ -161,7 +172,7 @@ function DisplayNationalSeatCount() {
 
 	var natSeatsText = document.getElementsByClassName("natSeats");
 
-	for (let p = 0; p < parties.length; p++) {
+	for (let p = 0; p < parties.abbreviation.length; p++) {
 		natSeatsText[p].innerText = natSeats[p];
 	}
 }
@@ -174,22 +185,22 @@ function InitializeRegions() {
 
 	for (let r = 0; r < regions.name.length; r++) {
 		regionSum[r] = 0;
-		for (let p = 0; p < parties.length; p++) {
-			regionVotes[parties[p]][r] = 0;
-			regionSeats[parties[p]][r] = 0;
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			regionVotes[parties.abbreviation[p]][r] = 0;
+			regionSeats[parties.abbreviation[p]][r] = 0;
 
 			for (let x = running; x < running + regions.seats[r]; x++) {
-				regionVotes[parties[p]][r] += vote[parties[p]][x];
+				regionVotes[parties.abbreviation[p]][r] += vote[parties.abbreviation[p]][x];
 
-				if (seatWinner[x] == parties[p]) {
-					regionSeats[parties[p]][r]++;
+				if (seatWinner[x] == parties.abbreviation[p]) {
+					regionSeats[parties.abbreviation[p]][r]++;
 				}
 			}
 
-			regionSum[r] += regionVotes[parties[p]][r];
+			regionSum[r] += regionVotes[parties.abbreviation[p]][r];
 		}
-		for (let p = 0; p < parties.length; p++) {
-			regionVotes[parties[p]][r] = fourDecRound(regionVotes[parties[p]][r] / regionSum[r]);
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			regionVotes[parties.abbreviation[p]][r] = fourDecRound(regionVotes[parties.abbreviation[p]][r] / regionSum[r]);
 		}
 
 		running += regions.seats[r];
@@ -210,16 +221,16 @@ function InitializeRegionalInputs() {
 	// regional inputs
 
 	for (let r = 0; r < regionsWithRegionalSwing; r++) {
-		for (let p = 0; p < parties.length; p++) {
-			var inputPointer = parties.length * r + p;
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			var inputPointer = parties.abbreviation.length * r + p;
 
-			if (parties[p] == "bqc" && regions.name[r] != "QC") {
+			if (parties.abbreviation[p] == "bqc" && regions.name[r] != "QC") {
 				inputs[inputPointer].disabled = true;
 			}
-			if (parties[p] == "oth") {
+			if (parties.abbreviation[p] == "oth") {
 				inputs[inputPointer].disabled = true;
 			}
-			inputs[inputPointer].value = fourDecRound(regionVotes[parties[p]][r] * 100).toFixed(2) + "%";
+			inputs[inputPointer].value = fourDecRound(regionVotes[parties.abbreviation[p]][r] * 100).toFixed(2) + "%";
 		}
 	}
 }
@@ -230,13 +241,13 @@ function InitializeRegionalSeatCounts() {
 	// regional seat counts
 
 	for (let r = 0; r < regionsWithRegionalSwing; r++) {
-		for (let p = 0; p < parties.length; p++) {
-			var inputPointer = parties.length * r + p;
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			var inputPointer = parties.abbreviation.length * r + p;
 
-			if (parties[p] == "bqc" && regions.name[r] != "QC") {
+			if (parties.abbreviation[p] == "bqc" && regions.name[r] != "QC") {
 				regionalSeats[inputPointer].innerText = "~";
 			} else {
-				regionalSeats[inputPointer].innerText = regionSeats[parties[p]][r];
+				regionalSeats[inputPointer].innerText = regionSeats[parties.abbreviation[p]][r];
 			}
 		}
 	}
@@ -248,13 +259,13 @@ function GetShiftFromInputs() {
 	var shift = [];
 
 	for (let r = 0; r < regionsWithRegionalSwing; r++) {
-		for (let p = 0; p < parties.length; p++) {
-			var inputPointer = parties.length * r + p;
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			var inputPointer = parties.abbreviation.length * r + p;
 
-			if (regionVotes[parties[p]][r] == 0) {
+			if (regionVotes[parties.abbreviation[p]][r] == 0) {
 				shift[inputPointer] = 0;
 			} else {
-				shift[inputPointer] = fourDecRound(parsePercentage(inputs[inputPointer].value) / regionVotes[parties[p]][r]);
+				shift[inputPointer] = fourDecRound(parsePercentage(inputs[inputPointer].value) / regionVotes[parties.abbreviation[p]][r]);
 			}
 		}
 	}
@@ -268,7 +279,7 @@ function Swing(shiftArr) {
 
 	var vpv = [];
 
-	for (let p = 0; p < parties.length; p++) {
+	for (let p = 0; p < parties.abbreviation.length; p++) {
 		vpv[p] = 0;
 	}
 
@@ -278,19 +289,19 @@ function Swing(shiftArr) {
 
 			var v = [];
 
-			for (let p = 0; p < parties.length; p++) {
-				var inputPointer = parties.length * r + p;
+			for (let p = 0; p < parties.abbreviation.length; p++) {
+				var inputPointer = parties.abbreviation.length * r + p;
 
-				v[p] = Math.round(vote[parties[p]][x] * shiftArr[inputPointer]);
+				v[p] = Math.round(vote[parties.abbreviation[p]][x] * shiftArr[inputPointer]);
 
 				sum += v[p];
 				vpv[p] += v[p];
 			}
 
-			for (let p = 0; p < parties.length; p++) {
-				vote_percent[parties[p]][x] = fourDecRound(v[p] / sum);
+			for (let p = 0; p < parties.abbreviation.length; p++) {
+				vote_percent[parties.abbreviation[p]][x] = fourDecRound(v[p] / sum);
 
-				//console.log(vote_percent[parties[p]][x]);
+				//console.log(vote_percent[parties.abbreviation[p]][x]);
 			}
 		}
 
@@ -298,29 +309,29 @@ function Swing(shiftArr) {
 	}
 
 	for (let x = 340; x < seats.id.length; x++) {
-		for (let p = 0; p < parties.length; p++) {
-			vpv[p] += vote[parties[p]][x];
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			vpv[p] += vote[parties.abbreviation[p]][x];
 		}
 	}
 
 	var xvpv = [];
 
-	for (let p = 0; p < parties.length; p++) {
+	for (let p = 0; p < parties.abbreviation.length; p++) {
 		xvpv[p] = fourDecRound(vpv[p] / vpv.reduce((a, b) => a + b, 0));
 	}
 
 	for (let x = 340; x < seats.id.length; x++) {
 		var sum = 0;
 
-		for (let p = 0; p < parties.length; p++) {
+		for (let p = 0; p < parties.abbreviation.length; p++) {
 			var shift = fourDecRound(xvpv[p] / pv[p]);
 
-			v[p] = Math.round(vote[parties[p]][x] * shift);
+			v[p] = Math.round(vote[parties.abbreviation[p]][x] * shift);
 			sum += v[p];
 		}
 
-		for (let p = 0; p < parties.length; p++) {
-			vote_percent[parties[p]][x] = fourDecRound(v[p] / sum);
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			vote_percent[parties.abbreviation[p]][x] = fourDecRound(v[p] / sum);
 		}
 	}
 
@@ -389,16 +400,16 @@ function ColourMap() {
 		var prty = partyCycle - 1;
 
 		for (let x = 0; x < seats.id.length; x++) {
-			var val = Math.ceil((rangeTop - vote_percent[parties[prty]][x]) / decrement);
+			var val = Math.ceil((rangeTop - vote_percent[parties.abbreviation[prty]][x]) / decrement);
 
-			fillSeat(seats.id[x], colourStep(hex[parties[prty]], 10, val - 5));
+			fillSeat(seats.id[x], colourStep(hex[parties.abbreviation[prty]], 10, val - 5));
 
-			if (vote_percent[parties[prty]][x] > rangeTop) {
-				fillSeat(seats.id[x], colourStep(hex[parties[prty]], 10, -6));
-			} else if (vote_percent[parties[prty]][x] < rangeBottom) {
-				fillSeat(seats.id[x], colourStep(hex[parties[prty]], 10, 6));
+			if (vote_percent[parties.abbreviation[prty]][x] > rangeTop) {
+				fillSeat(seats.id[x], colourStep(hex[parties.abbreviation[prty]], 10, -6));
+			} else if (vote_percent[parties.abbreviation[prty]][x] < rangeBottom) {
+				fillSeat(seats.id[x], colourStep(hex[parties.abbreviation[prty]], 10, 6));
 			}
-			if (vote_percent[parties[prty]][x] == 0) {
+			if (vote_percent[parties.abbreviation[prty]][x] == 0) {
 				fillSeat(seats.id[x], "#8a8a8a");
 			}
 		}
@@ -409,12 +420,12 @@ function RefreshRegionalSeats() {
 	var running = 0;
 
 	for (let r = 0; r < regions.name.length; r++) {
-		for (let p = 0; p < parties.length; p++) {
-			regionSeats[parties[p]][r] = 0;
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			regionSeats[parties.abbreviation[p]][r] = 0;
 
 			for (let x = running; x < running + regions.seats[r]; x++) {
-				if (seatWinner[x] == parties[p]) {
-					regionSeats[parties[p]][r]++;
+				if (seatWinner[x] == parties.abbreviation[p]) {
+					regionSeats[parties.abbreviation[p]][r]++;
 				}
 			}
 		}
@@ -422,20 +433,20 @@ function RefreshRegionalSeats() {
 	}
 
 	for (let r = 0; r < regionsWithRegionalSwing; r++) {
-		for (let p = 0; p < parties.length; p++) {
-			var inputPointer = parties.length * r + p;
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			var inputPointer = parties.abbreviation.length * r + p;
 
-			if (parties[p] == "bqc" && regions.name[r] != "QC") {
+			if (parties.abbreviation[p] == "bqc" && regions.name[r] != "QC") {
 				regionalSeats[inputPointer].innerText = "~";
 			} else {
-				regionalSeats[inputPointer].innerText = regionSeats[parties[p]][r];
+				regionalSeats[inputPointer].innerText = regionSeats[parties.abbreviation[p]][r];
 			}
 		}
 	}
 }
 
 function RefreshPopularVoteCount(arr) {
-	for (let p = 0; p < parties.length; p++) {
+	for (let p = 0; p < parties.abbreviation.length; p++) {
 		pvText[p].innerText = fourDecRound(arr[p] * 100) + "%";
 	}
 }
@@ -444,7 +455,7 @@ var scrapeUpperMOE = {};
 
 function GetScrapeMOE() {
 	for (let p = 0; p < 3; p++) {
-		Object.defineProperty(scrapeUpperMOE, parties[p], {
+		Object.defineProperty(scrapeUpperMOE, parties.abbreviation[p], {
 			value: [],
 			writable: true,
 			enumerable: true,
@@ -454,16 +465,16 @@ function GetScrapeMOE() {
 
 	for (let r = 0; r < regionsWithRegionalSwing; r++) {
 		for (let p = 0; p < 3; p++) {
-			// only three parties are used here, the lpc, cpc, and ndp
+			// only three parties.abbreviation are used here, the lpc, cpc, and ndp
 
-			var proportion = scrapedRegions[parties[p]][r];
+			var proportion = scrapedRegions[parties.abbreviation[p]][r];
 
 			// 1000 acts as our n, where n is the average polling sample size
 
 			// MOE is calculated at 95% confidence level
 			// 1.96 is therefore z value
 
-			scrapeUpperMOE[parties[p]][r] = fourDecRound(1.96 * Math.sqrt((proportion * (1 - proportion)) / 1000));
+			scrapeUpperMOE[parties.abbreviation[p]][r] = fourDecRound(1.96 * Math.sqrt((proportion * (1 - proportion)) / 1000));
 		}
 	}
 }
@@ -472,33 +483,35 @@ function GetShiftFromMOE(sel_p) {
 	var shiftArr = [];
 
 	for (let r = 0; r < regionsWithRegionalSwing; r++) {
-		var moe = scrapeUpperMOE[parties[sel_p]][r];
+		var moe = scrapeUpperMOE[parties.abbreviation[sel_p]][r];
 
 		var sum = 0;
 
-		for (let p = 0; p < parties.length; p++) {
-			var inputPointer = parties.length * r + p;
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			var inputPointer = parties.abbreviation.length * r + p;
 			if (p == sel_p) {
 			} else {
-				shiftArr[inputPointer] = regionVotes[parties[p]][r];
+				shiftArr[inputPointer] = regionVotes[parties.abbreviation[p]][r];
 				sum += shiftArr[inputPointer];
 			}
 		}
 
-		for (let p = 0; p < parties.length; p++) {
-			var inputPointer = parties.length * r + p;
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			var inputPointer = parties.abbreviation.length * r + p;
 			if (p == sel_p) {
-				shiftArr[inputPointer] = fourDecRound((scrapedRegions[parties[p]][r] + moe) / regionVotes[parties[p]][r]);
+				shiftArr[inputPointer] = fourDecRound((scrapedRegions[parties.abbreviation[p]][r] + moe) / regionVotes[parties.abbreviation[p]][r]);
 			} else {
-				if (regionVotes[parties[p]][r] == 0) {
+				if (regionVotes[parties.abbreviation[p]][r] == 0) {
 					shiftArr[inputPointer] = 0;
 				} else {
-					shiftArr[inputPointer] = regionVotes[parties[p]][r] / sum;
+					shiftArr[inputPointer] = regionVotes[parties.abbreviation[p]][r] / sum;
 					shiftArr[inputPointer] = fourDecRound(shiftArr[inputPointer] * moe);
-					shiftArr[inputPointer] = fourDecRound((scrapedRegions[parties[p]][r] - shiftArr[inputPointer]) / regionVotes[parties[p]][r]);
+					shiftArr[inputPointer] = fourDecRound(
+						(scrapedRegions[parties.abbreviation[p]][r] - shiftArr[inputPointer]) / regionVotes[parties.abbreviation[p]][r]
+					);
 				}
 			}
-			inputs[inputPointer].value = fourDecRound(fourDecRound(regionVotes[parties[p]][r] * shiftArr[inputPointer]) * 100).toFixed(2) + "%";
+			inputs[inputPointer].value = fourDecRound(fourDecRound(regionVotes[parties.abbreviation[p]][r] * shiftArr[inputPointer]) * 100).toFixed(2) + "%";
 		}
 	}
 
@@ -508,15 +521,15 @@ function GetShiftFromMOE(sel_p) {
 var scrapedRegions = {};
 
 function ParseScrape() {
-	for (let p = 0; p < parties.length; p++) {
-		Object.defineProperty(scrapedRegions, parties[p], {
+	for (let p = 0; p < parties.abbreviation.length; p++) {
+		Object.defineProperty(scrapedRegions, parties.abbreviation[p], {
 			value: [],
 			writable: true,
 			enumerable: true,
 			configurable: true,
 		});
 		for (let r = 0; r < regions.name.length; r++) {
-			scrapedRegions[parties[p]][r] = regionVotes[parties[p]][r];
+			scrapedRegions[parties.abbreviation[p]][r] = regionVotes[parties.abbreviation[p]][r];
 		}
 	}
 
@@ -527,10 +540,10 @@ function ParseScrape() {
 
 		arr = raw.split(",");
 
-		for (let p = 0; p < parties.length; p++) {
+		for (let p = 0; p < parties.abbreviation.length; p++) {
 			for (let a = 0; a < arr.length; a++) {
-				if (arr[a] == parties[p]) {
-					scrapedRegions[parties[p]][r] = parseFloat(arr[a + 1]);
+				if (arr[a] == parties.abbreviation[p]) {
+					scrapedRegions[parties.abbreviation[p]][r] = parseFloat(arr[a + 1]);
 				}
 			}
 		}
@@ -541,16 +554,16 @@ function ScrapeIntoShift() {
 	var shiftArr = [];
 
 	for (let r = 0; r < regionsWithRegionalSwing; r++) {
-		for (let p = 0; p < parties.length; p++) {
-			var inputPointer = parties.length * r + p;
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			var inputPointer = parties.abbreviation.length * r + p;
 
-			if (regionVotes[parties[p]][r] == 0) {
+			if (regionVotes[parties.abbreviation[p]][r] == 0) {
 				shiftArr[inputPointer] = 0;
 			} else {
-				shiftArr[inputPointer] = fourDecRound(scrapedRegions[parties[p]][r] / regionVotes[parties[p]][r]);
+				shiftArr[inputPointer] = fourDecRound(scrapedRegions[parties.abbreviation[p]][r] / regionVotes[parties.abbreviation[p]][r]);
 			}
 
-			inputs[inputPointer].value = fourDecRound(scrapedRegions[parties[p]][r] * 100).toFixed(2) + "%";
+			inputs[inputPointer].value = fourDecRound(scrapedRegions[parties.abbreviation[p]][r] * 100).toFixed(2) + "%";
 		}
 	}
 

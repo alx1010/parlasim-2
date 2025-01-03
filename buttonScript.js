@@ -33,7 +33,7 @@ btnPartyStrength.addEventListener("click", () => {
 	mapMode = 4;
 	ColourMap();
 
-	if (partyCycle == parties.length) {
+	if (partyCycle == parties.abbreviation.length) {
 		partyCycle = 0;
 	}
 });
@@ -50,7 +50,7 @@ btnAverages.addEventListener("click", () => {
 
 for (let p = 0; p < 3; p++) {
 	// only lpc, cpc and ndp considered for this
-	var elem = document.getElementById("btn_" + parties[p] + "UpperMOE");
+	var elem = document.getElementById("btn_" + parties.abbreviation[p] + "UpperMOE");
 
 	elem.addEventListener("click", () => {
 		var shiftArr = GetShiftFromMOE(p);
@@ -59,12 +59,12 @@ for (let p = 0; p < 3; p++) {
 }
 
 btnAdjustColours.addEventListener("click", () => {
-	for (let p = 0; p < parties.length; p++) {
-		var promptResponse = window.prompt(parties[p] + "Colour", hex[parties[p]]);
+	for (let p = 0; p < parties.abbreviation.length; p++) {
+		var promptResponse = window.prompt(parties.fullName[p] + "  - Colour:", hex[parties.abbreviation[p]]);
 
 		if (promptResponse == null) {
 		} else {
-			hex[parties[p]] = promptResponse;
+			hex[parties.abbreviation[p]] = promptResponse;
 		}
 	}
 	ColourMap();
