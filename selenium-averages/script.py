@@ -5,11 +5,7 @@ from selenium.webdriver.common.keys import Keys
 
 import undetected_chromedriver as uc
 
-from selenium_stealth import stealth
-
 import time
-
-import csv
 
 t = 2
 
@@ -19,17 +15,7 @@ chrome_options.add_argument('--headless=new')
 chrome_options.add_argument("--start-maximized")
 chrome_options.add_argument("user-agent={}".format(user_agent))
 driver = uc.Chrome(options=chrome_options)
-#stealth(driver,
-#        languages=["en-US", "en"],
-#        vendor="Google Inc.",
-#        platform="Win32",
-#        webgl_vendor="Intel Inc.",
-#        renderer="Intel Iris OpenGL Engine",
-#        fix_hairline=False
-#        )
 
-p = ''
-z = ''
 
 def getValues():
     titles = driver.find_elements(By.CLASS_NAME, 'partyTitle')
@@ -68,8 +54,6 @@ baseUrl = 'https://canadianpolling.ca/Canada-$$-2021'
 class regions:
     name = ['BC', 'AB', 'SKMB', 'ON', 'QC', 'ATL']
 
-data = []
-
 for r in regions.name:
     driver.get(baseUrl.replace('$$', r))
 
@@ -86,9 +70,5 @@ for r in regions.name:
 
     f = open(filename, "w")
     f.write(s)
-
-x = 0
-
-
 
 driver.quit()

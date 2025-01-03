@@ -129,29 +129,43 @@ document.addEventListener("DOMContentLoaded", function () {
 		IntializeRegionalInputs();
 		IntializeRegionalSeatCounts();
 
+		ParseScrape();
+
+		GetScrapeMOE();
+
 		// enables clicking on seat to see results
 
 		var e = document.getElementsByClassName("seatVote");
 
-		for (let x = 0; x < seats.id.length; x++) {
-			SVGMAP.getElementById(seats.id[x]).addEventListener("click", () => {
-				document.getElementById("SeatName").innerText = seats.name[x];
+		InitializeSeatVoteText();
 
-				for (let z = 0; z < parties.length; z++) {
-					e[z].innerText = fourDecRound(vote_percent[parties[z]][x] * 100).toFixed(2) + "%";
-				}
-			});
-		}
-
-		// start with first seat 'clicked'
-
-		document.getElementById("SeatName").innerText = seats.name[0];
-
-		for (let z = 0; z < parties.length; z++) {
-			e[z].innerText = fourDecRound(vote_percent[parties[z]][0] * 100).toFixed(2) + "%";
-		}
+		InitialSeatClick();
 	});
 });
+
+var seatVoteText = document.getElementsByClassName("seatVote");
+
+function InitializeSeatVoteText() {
+	for (let x = 0; x < seats.id.length; x++) {
+		SVGMAP.getElementById(seats.id[x]).addEventListener("click", () => {
+			document.getElementById("SeatName").innerText = seats.name[x];
+
+			for (let z = 0; z < parties.length; z++) {
+				seatVoteText[z].innerText = fourDecRound(vote_percent[parties[z]][x] * 100).toFixed(2) + "%";
+			}
+		});
+	}
+}
+
+function InitialSeatClick() {
+	// start with first seat 'clicked'
+
+	document.getElementById("SeatName").innerText = seats.name[0];
+
+	for (let z = 0; z < parties.length; z++) {
+		seatVoteText[z].innerText = fourDecRound(vote_percent[parties[z]][0] * 100).toFixed(2) + "%";
+	}
+}
 
 // Beginning of Popular Vote Text setup
 
@@ -243,7 +257,7 @@ function IntializeRegionalInputs() {
 			if (parties[p] == "oth") {
 				inputs[inputPointer].disabled = true;
 			}
-			inputs[inputPointer].value = fourDecRound(regionVotes[parties[p]][r] * 100) + "%";
+			inputs[inputPointer].value = fourDecRound(regionVotes[parties[p]][r] * 100).toFixed(2) + "%";
 		}
 	}
 }
@@ -356,6 +370,8 @@ function Swing(shiftArr) {
 	RefreshRegionalSeats();
 
 	RefreshPopularVoteCount(xvpv);
+
+	InitialSeatClick();
 }
 
 function RefreshMap() {
@@ -410,11 +426,9 @@ function RefreshPopularVoteCount(arr) {
 	}
 }
 
+var scrapedRegions = {};
+
 function ParseScrape() {
-	var shiftArr = [];
-
-	var scrapedRegions = {};
-
 	for (let p = 0; p < parties.length; p++) {
 		Object.defineProperty(scrapedRegions, parties[p], {
 			value: [],
@@ -435,19 +449,90 @@ function ParseScrape() {
 		arr = raw.split(",");
 
 		for (let p = 0; p < parties.length; p++) {
-			var inputPointer = parties.length * r + p;
-
 			for (let a = 0; a < arr.length; a++) {
 				if (arr[a] == parties[p]) {
 					scrapedRegions[parties[p]][r] = parseFloat(arr[a + 1]);
 				}
 			}
+		}
+	}
+}
+
+var scrapeUpperMOE = {};
+
+function GetScrapeMOE() {
+	for (let p = 0; p < 3; p++) {
+		Object.defineProperty(scrapeUpperMOE, parties[p], {
+			value: [],
+			writable: true,
+			enumerable: true,
+			configurable: true,
+		});
+	}
+
+	for (let r = 0; r < regionsWithRegionalSwing; r++) {
+		for (let p = 0; p < 3; p++) {
+			// only three parties are used here, the lpc, cpc, and ndp
+
+			var proportion = scrapedRegions[parties[p]][r];
+
+			// 1000 acts as our n, where n is the average polling sample size
+
+			scrapeUpperMOE[parties[p]][r] = fourDecRound(1.96 * Math.sqrt((proportion * (1 - proportion)) / 1000));
+		}
+	}
+}
+
+function GetShiftFromMOE(sel_p) {
+	var shiftArr = [];
+
+	for (let r = 0; r < regionsWithRegionalSwing; r++) {
+		var moe = scrapeUpperMOE[parties[sel_p]][r];
+
+		var sum = 0;
+
+		for (let p = 0; p < parties.length; p++) {
+			var inputPointer = parties.length * r + p;
+			if (p == sel_p) {
+			} else {
+				shiftArr[inputPointer] = regionVotes[parties[p]][r];
+				sum += shiftArr[inputPointer];
+			}
+		}
+
+		for (let p = 0; p < parties.length; p++) {
+			var inputPointer = parties.length * r + p;
+			if (p == sel_p) {
+				shiftArr[inputPointer] = fourDecRound((scrapedRegions[parties[p]][r] + moe) / regionVotes[parties[p]][r]);
+			} else {
+				if (regionVotes[parties[p]][r] == 0) {
+					shiftArr[inputPointer] = 0;
+				} else {
+					shiftArr[inputPointer] = regionVotes[parties[p]][r] / sum;
+					shiftArr[inputPointer] = fourDecRound(shiftArr[inputPointer] * moe);
+					shiftArr[inputPointer] = fourDecRound((scrapedRegions[parties[p]][r] - shiftArr[inputPointer]) / regionVotes[parties[p]][r]);
+				}
+			}
+		}
+	}
+
+	return shiftArr;
+}
+
+function ScrapeIntoShift() {
+	var shiftArr = [];
+
+	for (let r = 0; r < regionsWithRegionalSwing; r++) {
+		for (let p = 0; p < parties.length; p++) {
+			var inputPointer = parties.length * r + p;
 
 			if (regionVotes[parties[p]][r] == 0) {
 				shiftArr[inputPointer] = 0;
 			} else {
 				shiftArr[inputPointer] = fourDecRound(scrapedRegions[parties[p]][r] / regionVotes[parties[p]][r]);
 			}
+
+			inputs[inputPointer].value = fourDecRound(scrapedRegions[parties[p]][r] * 100).toFixed(2) + "%";
 		}
 	}
 

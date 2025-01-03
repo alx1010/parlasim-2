@@ -71,6 +71,15 @@ btnSim.addEventListener("click", () => {
 });
 
 btnAverages.addEventListener("click", () => {
-	var shiftArr = ParseScrape();
+	var shiftArr = ScrapeIntoShift();
 	Swing(shiftArr);
 });
+
+for (let p = 0; p < 3; p++) {
+	var elem = document.getElementById(parties[p] + "UpperMOE");
+
+	elem.addEventListener("click", () => {
+		var shiftArr = GetShiftFromMOE(p);
+		Swing(shiftArr);
+	});
+}
