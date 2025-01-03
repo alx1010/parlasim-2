@@ -1,6 +1,6 @@
 // Initial setup, reading data and parsing
 
-var data_raw = readFile("data.csv").split("\r").join("").split("\n").join(",").split(",");
+var electionDataRaw = readFile("electionData.csv").split("\r").join("").split("\n").join(",").split(",");
 
 var seats = { name: [], id: [] };
 
@@ -15,8 +15,6 @@ var parties = ["lpc", "cpc", "ndp", "grn", "ppc", "bqc", "oth"];
 
 var seatWinner = [];
 var seatMargin = [];
-
-// todo regions
 
 // arranged by order in data file
 // territories are set to use pv swing due to low regional data
@@ -58,17 +56,17 @@ for (let y = 0; y < parties.length; y++) {
 
 // 11 columns, removes header line
 
-data_raw = data_raw.slice(11, data_raw.length);
+electionDataRaw = electionDataRaw.slice(11, electionDataRaw.length);
 
-for (let x = 0; x < data_raw.length / 11; x++) {
-	seats.name[x] = data_raw[0 + x * 11];
-	seats.id[x] = data_raw[1 + x * 11];
+for (let x = 0; x < electionDataRaw.length / 11; x++) {
+	seats.name[x] = electionDataRaw[0 + x * 11];
+	seats.id[x] = electionDataRaw[1 + x * 11];
 
 	for (let y = 0; y < parties.length; y++) {
-		vote[parties[y]][x] = parseInt(data_raw[2 + y + x * 11]);
+		vote[parties[y]][x] = parseInt(electionDataRaw[2 + y + x * 11]);
 	}
 
-	total_votes[x] = parseInt(data_raw[9 + x * 11]);
+	total_votes[x] = parseInt(electionDataRaw[9 + x * 11]);
 }
 
 // Creates initial vote percent object using inital raw votes
@@ -105,66 +103,30 @@ function findWinnerAndMargin() {
 	}
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-	// get first <object>
-	const objTag = document.querySelector(".svgmap");
-
-	// wait for SVG to load
-
-	objTag.addEventListener("load", () => {
-		// reference to SVG document
-
-		var svgDoc = objTag.contentDocument;
-
-		SVGMAP = svgDoc.documentElement;
-
-		findWinnerAndMargin();
-
-		DisplayNationalSeatCount();
-
-		InitializeRegions();
-
-		RefreshMap();
-
-		IntializeRegionalInputs();
-		IntializeRegionalSeatCounts();
-
-		ParseScrape();
-
-		GetScrapeMOE();
-
-		// enables clicking on seat to see results
-
-		var e = document.getElementsByClassName("seatVote");
-
-		InitializeSeatVoteText();
-
-		InitialSeatClick();
-	});
-});
-
 var seatVoteText = document.getElementsByClassName("seatVote");
+
+var CurrentlyClickedSeat = 0;
 
 function InitializeSeatVoteText() {
 	for (let x = 0; x < seats.id.length; x++) {
 		SVGMAP.getElementById(seats.id[x]).addEventListener("click", () => {
-			document.getElementById("SeatName").innerText = seats.name[x];
-
-			for (let z = 0; z < parties.length; z++) {
-				seatVoteText[z].innerText = fourDecRound(vote_percent[parties[z]][x] * 100).toFixed(2) + "%";
-			}
+			ClickSeat(x);
 		});
 	}
 }
 
-function InitialSeatClick() {
-	// start with first seat 'clicked'
+function ClickSeat(click) {
+	document.getElementById("SeatName").innerText = seats.name[click];
 
-	document.getElementById("SeatName").innerText = seats.name[0];
+	CurrentlyClickedSeat = click;
 
 	for (let z = 0; z < parties.length; z++) {
-		seatVoteText[z].innerText = fourDecRound(vote_percent[parties[z]][0] * 100).toFixed(2) + "%";
+		seatVoteText[z].innerText = fourDecRound(vote_percent[parties[z]][click] * 100).toFixed(2) + "%";
 	}
+}
+
+function RefreshSeatClick() {
+	ClickSeat(CurrentlyClickedSeat);
 }
 
 // Beginning of Popular Vote Text setup
@@ -244,7 +206,7 @@ for (let r = 0; r < regions.name.length; r++) {
 
 var inputs = document.getElementsByClassName("input-input");
 
-function IntializeRegionalInputs() {
+function InitializeRegionalInputs() {
 	// regional inputs
 
 	for (let r = 0; r < regionsWithRegionalSwing; r++) {
@@ -264,7 +226,7 @@ function IntializeRegionalInputs() {
 
 var regionalSeats = document.getElementsByClassName("regional-seats");
 
-function IntializeRegionalSeatCounts() {
+function InitializeRegionalSeatCounts() {
 	// regional seat counts
 
 	for (let r = 0; r < regionsWithRegionalSwing; r++) {
@@ -363,7 +325,7 @@ function Swing(shiftArr) {
 	}
 
 	findWinnerAndMargin();
-	RefreshMap();
+	ColourMap();
 
 	DisplayNationalSeatCount();
 
@@ -371,22 +333,74 @@ function Swing(shiftArr) {
 
 	RefreshPopularVoteCount(xvpv);
 
-	InitialSeatClick();
+	RefreshSeatClick();
 }
 
-function RefreshMap() {
-	for (let x = 0; x < seats.id.length; x++) {
-		var val = Math.ceil((rangeTop - vote_percent[seatWinner[x]][x]) / decrement);
+var mapMode = 0;
 
-		fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, val - 5));
+function ColourMap() {
+	// 0 for vote share
+	// 1 for margin
+	// 2 for flips
+	// 3 for solid
+	// 4 for share by party
 
-		if (vote_percent[seatWinner[x]][x] > rangeTop) {
-			fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, -6));
-		} else if (vote_percent[seatWinner[x]][x] < rangeBottom) {
-			fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, 6));
+	if (mapMode == 0) {
+		for (let x = 0; x < seats.id.length; x++) {
+			var val = Math.ceil((rangeTop - vote_percent[seatWinner[x]][x]) / decrement);
+
+			fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, val - 5));
+
+			if (vote_percent[seatWinner[x]][x] > rangeTop) {
+				fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, -6));
+			} else if (vote_percent[seatWinner[x]][x] < rangeBottom) {
+				fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, 6));
+			}
+			if (vote_percent[seatWinner[x]][x] == 0) {
+				fillSeat(seats.id[x], "#8a8a8a");
+			}
 		}
-		if (vote_percent[seatWinner[x]][x] == 0) {
-			fillSeat(seats.id[x], "#8a8a8a");
+	}
+	if (mapMode == 1) {
+		for (let x = 0; x < seats.id.length; x++) {
+			var val = Math.ceil((0.45 - seatMargin[x]) / decrement);
+
+			fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, val - 5));
+
+			if (seatMargin[x] > 0.45) {
+				fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, -6));
+			} else if (seatMargin[x] < 0.05) {
+				fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, 6));
+			}
+			if (seatMargin[x] == 0) {
+				fillSeat(seats.id[x], "#8a8a8a");
+			}
+		}
+	}
+	if (mapMode == 2) {
+		// todo
+	}
+	if (mapMode == 3) {
+		for (let x = 0; x < seats.id.length; x++) {
+			fillSeat(seats.id[x], hex[seatWinner[x]]);
+		}
+	}
+	if (mapMode == 4) {
+		var prty = partyCycle - 1;
+
+		for (let x = 0; x < seats.id.length; x++) {
+			var val = Math.ceil((rangeTop - vote_percent[parties[prty]][x]) / decrement);
+
+			fillSeat(seats.id[x], colourStep(hex[parties[prty]], 10, val - 5));
+
+			if (vote_percent[parties[prty]][x] > rangeTop) {
+				fillSeat(seats.id[x], colourStep(hex[parties[prty]], 10, -6));
+			} else if (vote_percent[parties[prty]][x] < rangeBottom) {
+				fillSeat(seats.id[x], colourStep(hex[parties[prty]], 10, 6));
+			}
+			if (vote_percent[parties[prty]][x] == 0) {
+				fillSeat(seats.id[x], "#8a8a8a");
+			}
 		}
 	}
 }
@@ -423,38 +437,6 @@ function RefreshRegionalSeats() {
 function RefreshPopularVoteCount(arr) {
 	for (let p = 0; p < parties.length; p++) {
 		pvText[p].innerText = fourDecRound(arr[p] * 100) + "%";
-	}
-}
-
-var scrapedRegions = {};
-
-function ParseScrape() {
-	for (let p = 0; p < parties.length; p++) {
-		Object.defineProperty(scrapedRegions, parties[p], {
-			value: [],
-			writable: true,
-			enumerable: true,
-			configurable: true,
-		});
-		for (let r = 0; r < regions.name.length; r++) {
-			scrapedRegions[parties[p]][r] = regionVotes[parties[p]][r];
-		}
-	}
-
-	for (let r = 0; r < regionsWithRegionalSwing; r++) {
-		filename = "/selenium-averages/scrape_" + regions.name[r] + ".txt";
-
-		var raw = readFile(filename);
-
-		arr = raw.split(",");
-
-		for (let p = 0; p < parties.length; p++) {
-			for (let a = 0; a < arr.length; a++) {
-				if (arr[a] == parties[p]) {
-					scrapedRegions[parties[p]][r] = parseFloat(arr[a + 1]);
-				}
-			}
-		}
 	}
 }
 
@@ -522,6 +504,38 @@ function GetShiftFromMOE(sel_p) {
 	return shiftArr;
 }
 
+var scrapedRegions = {};
+
+function ParseScrape() {
+	for (let p = 0; p < parties.length; p++) {
+		Object.defineProperty(scrapedRegions, parties[p], {
+			value: [],
+			writable: true,
+			enumerable: true,
+			configurable: true,
+		});
+		for (let r = 0; r < regions.name.length; r++) {
+			scrapedRegions[parties[p]][r] = regionVotes[parties[p]][r];
+		}
+	}
+
+	for (let r = 0; r < regionsWithRegionalSwing; r++) {
+		filename = "/selenium-averages/scrape_" + regions.name[r] + ".txt";
+
+		var raw = readFile(filename);
+
+		arr = raw.split(",");
+
+		for (let p = 0; p < parties.length; p++) {
+			for (let a = 0; a < arr.length; a++) {
+				if (arr[a] == parties[p]) {
+					scrapedRegions[parties[p]][r] = parseFloat(arr[a + 1]);
+				}
+			}
+		}
+	}
+}
+
 function ScrapeIntoShift() {
 	var shiftArr = [];
 
@@ -541,3 +555,43 @@ function ScrapeIntoShift() {
 
 	return shiftArr;
 }
+
+// Runs once all items are loaded
+
+document.addEventListener("DOMContentLoaded", function () {
+	// get first <object>
+	const objTag = document.querySelector(".svgmap");
+
+	// Runs once SVG loads
+
+	objTag.addEventListener("load", () => {
+		// reference to SVG document
+
+		var svgDoc = objTag.contentDocument;
+
+		SVGMAP = svgDoc.documentElement;
+
+		findWinnerAndMargin();
+
+		DisplayNationalSeatCount();
+
+		InitializeRegions();
+
+		ColourMap();
+
+		InitializeRegionalInputs();
+		InitializeRegionalSeatCounts();
+
+		ParseScrape();
+
+		GetScrapeMOE();
+
+		// enables clicking on seat to see results
+
+		var e = document.getElementsByClassName("seatVote");
+
+		InitializeSeatVoteText();
+
+		ClickSeat(0);
+	});
+});
