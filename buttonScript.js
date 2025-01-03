@@ -67,5 +67,5 @@ btnAdjustColours.addEventListener("click", () => {
 			hex[parties[p]] = promptResponse;
 		}
 	}
-	RefreshMap();
+	ColourMap();
 });
