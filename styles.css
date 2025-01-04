@@ -167,13 +167,7 @@ body {
 }
 
 #input-table {
-	display: grid;
-	grid-template-columns: repeat(8, auto);
-	grid-template-rows: repeat(6, auto);
-	justify-items: center;
-	align-items: center;
-	width: 95%;
-	height: 100%;
+	grid-template-rows: repeat(7, auto);
 }
 
 #input-table > p {
@@ -213,13 +207,7 @@ body {
 }
 
 #detailed-data-table {
-	display: grid;
-	grid-template-columns: repeat(8, auto);
 	grid-template-rows: repeat(8, auto);
-	justify-items: center;
-	align-items: center;
-	width: 95%;
-	height: 100%;
 }
 
 #detailed-data-table > p {
@@ -234,4 +222,13 @@ body {
 	font-weight: bold;
 	color: var(--font-colour);
 	margin: 0 0;
+}
+
+.mr-grids {
+	display: grid;
+	grid-template-columns: repeat(8, minmax(0, 1fr));
+	justify-items: center;
+	align-items: center;
+	width: 95%;
+	height: 100%;
 }
