@@ -609,6 +609,15 @@ function ResetHexes() {
 	StoreHexes();
 }
 
+var pvAccents = document.getElementsByClassName("pvAccents");
+
+function SetAccentColours() {
+	for (let p = 0; p < parties.abbreviation.length; p++) {
+		pvAccents[p].style.backgroundColor = hex[parties.abbreviation[p]];
+		pvAccents[p + parties.abbreviation.length].style.backgroundColor = hex[parties.abbreviation[p]];
+	}
+}
+
 // Runs once all items are loaded
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -631,6 +640,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		InitializeRegions();
 
 		InitializeHexStorage();
+
+		SetAccentColours();
 
 		ColourMap();
 

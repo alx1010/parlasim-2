@@ -69,10 +69,12 @@ btnAdjustColours.addEventListener("click", () => {
 		}
 	}
 	StoreHexes();
+	SetAccentColours();
 	ColourMap();
 });
 
 btnResetColours.addEventListener("click", () => {
 	ResetHexes();
+	SetAccentColours();
 	ColourMap();
 });
