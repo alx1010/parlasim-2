@@ -9,7 +9,9 @@ var vote_percent = {};
 
 var total_votes = [];
 
-var hex = { lpc: "#ea6d6a", cpc: "#6495ec", ndp: "#EF7C01", grn: "#10c25b", ppc: "#6f5d9a", bqc: "#19bfd2", oth: "#898989" };
+var hex = { lpc: "#ea6d6a", cpc: "#6495ec", ndp: "#ef8e3e", grn: "#10c25b", ppc: "#6f5d9a", bqc: "#19bfd2", oth: "#898989" };
+
+const baseHex = hex;
 
 var parties = {
 	abbreviation: ["lpc", "cpc", "ndp", "grn", "ppc", "bqc", "oth"],
@@ -605,7 +607,7 @@ function StoreHexes() {
 }
 
 function ResetHexes() {
-	hex = { lpc: "#ea6d6a", cpc: "#6495ec", ndp: "#EF7C01", grn: "#10c25b", ppc: "#6f5d9a", bqc: "#19bfd2", oth: "#898989" };
+	hex = baseHex;
 	StoreHexes();
 }
 
