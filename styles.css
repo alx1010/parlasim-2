@@ -24,6 +24,14 @@ body {
 	border-color: var(--border-colour);
 }
 
+.pvAccents {
+	width: 95%;
+	height: 0.5vh;
+	border: 2px;
+	border-style: solid;
+	border-color: black;
+}
+
 #map {
 	padding: 1vh 1vw;
 	box-sizing: border-box;
