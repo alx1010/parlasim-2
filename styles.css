@@ -119,9 +119,10 @@ body {
 	background-color: var(--box-colour);
 	display: grid;
 	grid-template-columns: repeat(2, auto);
-	grid-template-rows: repeat(7, auto);
+	grid-template-rows: repeat(11, auto);
 	padding: 1% 5%;
 	box-sizing: border-box;
+	align-items: center;
 	border-style: dashed;
 	border-color: var(--border-colour);
 }
@@ -229,7 +230,8 @@ body {
 }
 
 #fr-box-bottom > p {
-	font-size: 1vw;
+	font-size: 0.9vw;
 	font-weight: bold;
 	color: var(--font-colour);
+	margin: 0 0;
 }

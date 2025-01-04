@@ -589,6 +589,26 @@ function ScrapeIntoShift() {
 	return shiftArr;
 }
 
+// Handles storing of colour hexes in localStorage
+
+function InitializeHexStorage() {
+	if (localStorage.getItem("hex_storage") == null) {
+		localStorage.setItem("hex_storage", JSON.stringify(hex));
+	} else {
+		hex = JSON.parse(localStorage.getItem("hex_storage"));
+	}
+}
+
+function StoreHexes() {
+	localStorage.clear();
+	localStorage.setItem("hex_storage", JSON.stringify(hex));
+}
+
+function ResetHexes() {
+	hex = { lpc: "#ea6d6a", cpc: "#6495ec", ndp: "#EF7C01", grn: "#10c25b", ppc: "#6f5d9a", bqc: "#19bfd2", oth: "#898989" };
+	StoreHexes();
+}
+
 // Runs once all items are loaded
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -609,6 +629,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		DisplayNationalSeatCount();
 
 		InitializeRegions();
+
+		InitializeHexStorage();
 
 		ColourMap();
 

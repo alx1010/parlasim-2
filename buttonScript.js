@@ -9,6 +9,7 @@ const btnPartyStrength = document.getElementById("btnPartyStrength");
 const btnAverages = document.getElementById("btnAverages");
 
 const btnAdjustColours = document.getElementById("btnAdjustColours");
+const btnResetColours = document.getElementById("btnResetColours");
 
 btnByShare.addEventListener("click", () => {
 	mapMode = 0;
@@ -67,5 +68,11 @@ btnAdjustColours.addEventListener("click", () => {
 			hex[parties.abbreviation[p]] = promptResponse;
 		}
 	}
+	StoreHexes();
+	ColourMap();
+});
+
+btnResetColours.addEventListener("click", () => {
+	ResetHexes();
 	ColourMap();
 });
