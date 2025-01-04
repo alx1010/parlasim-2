@@ -17,7 +17,7 @@ body {
 #head {
 	padding: 1.5vh 1vw;
 	display: flex;
-	gap: 3vw;
+	gap: 2vw;
 	align-items: center;
 	background-color: var(--box-colour);
 	border-style: dashed;
@@ -201,7 +201,7 @@ body {
 
 .heading-text {
 	margin: 10% 0;
-	font-size: 1.5vw;
+	font-size: 1.7vw;
 	font-weight: bold;
 	color: var(--font-colour);
 }
