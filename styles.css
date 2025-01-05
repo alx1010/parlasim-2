@@ -40,6 +40,7 @@ body {
 }
 
 #head {
+	height: 40%;
 	padding: 1.5vh 1vw;
 	display: flex;
 	gap: 0.5vw;
@@ -83,7 +84,7 @@ body {
 	padding: 0.7vw;
 	display: flex;
 	flex-direction: column;
-	gap: 1vh;
+	gap: 1.5vh;
 	justify-content: space-between;
 	border-style: dashed;
 	border-color: var(--border-colour);
@@ -97,7 +98,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	border-style: dashed;
-	gap: 1vh;
+	gap: 1.5vh;
 	border-color: var(--border-colour);
 	background-color: var(--wrapper-colour);
 }
@@ -129,7 +130,7 @@ body {
 	padding: 0.7vw;
 	display: flex;
 	flex-direction: column;
-	gap: 1vh;
+	gap: 1.5vh;
 	border-style: dashed;
 	border-color: var(--border-colour);
 	background-color: var(--wrapper-colour);
