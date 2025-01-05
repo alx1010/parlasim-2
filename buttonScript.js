@@ -12,6 +12,9 @@ const btnAverages = document.getElementById("btnAverages");
 const btnAdjustColours = document.getElementById("btnAdjustColours");
 const btnResetColours = document.getElementById("btnResetColours");
 
+const btnExportMapPNG = document.getElementById("btnExportMapPNG");
+const btnExportMapSVG = document.getElementById("btnExportMapSVG");
+
 btnByShare.addEventListener("click", () => {
 	mapMode = 0;
 	ColourMap();
@@ -83,4 +86,12 @@ btnResetColours.addEventListener("click", () => {
 	ResetHexes();
 	SetAccentColours();
 	ColourMap();
+});
+
+btnExportMapPNG.addEventListener("click", () => {
+	SaveMapAsImage();
+});
+
+btnExportMapSVG.addEventListener("click", () => {
+	SaveMapAsSVG();
 });

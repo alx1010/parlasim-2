@@ -636,6 +636,78 @@ function SetAccentColours() {
 	}
 }
 
+function SaveMapAsImage() {
+	var originalStroke = SVGMAP.getElementById(seats.id[0]).style.strokeWidth;
+
+	for (let x = 0; x < seats.id.length; x++) {
+		SVGMAP.getElementById(seats.id[x]).style.strokeWidth = "0.1px";
+	}
+
+	const data = new XMLSerializer().serializeToString(SVGMAP);
+
+	const svgBlob = new Blob([data], {
+		type: "image/svg+xml;charset=utf-8",
+	});
+
+	const url = URL.createObjectURL(svgBlob);
+
+	// load the SVG blob to a flesh image object
+	const img = new Image();
+	img.addEventListener("load", () => {
+		// draw the image on an ad-hoc canvas
+		const bbox = SVGMAP.getBBox();
+
+		console.log(bbox.x + " and " + bbox.y);
+
+		const imgWidth = 798.05712 * 10;
+		const imgHeight = 686.06091 * 10;
+
+		const canvas = document.createElement("canvas");
+		canvas.width = imgWidth;
+		canvas.height = imgHeight;
+
+		const context = canvas.getContext("2d");
+		context.drawImage(img, 0, 0, imgWidth, imgHeight);
+
+		URL.revokeObjectURL(url);
+
+		// trigger a synthetic download operation with a temporary link
+		const a = document.createElement("a");
+		a.download = "image.png";
+		document.body.appendChild(a);
+		a.href = canvas.toDataURL();
+		a.click();
+		a.remove();
+	});
+	img.src = url;
+
+	for (let x = 0; x < seats.id.length; x++) {
+		SVGMAP.getElementById(seats.id[x]).style.strokeWidth = originalStroke;
+	}
+}
+
+function SaveMapAsSVG() {
+	const data = new XMLSerializer().serializeToString(SVGMAP);
+
+	// Create element with <a> tag
+	const link = document.createElement("a");
+
+	// Create a blob object with the file content which you want to add to the file
+	const svgBlob = new Blob([data], {
+		type: "image/svg+xml;charset=utf-8",
+	});
+
+	// Add file content in the object URL
+	link.href = URL.createObjectURL(svgBlob);
+
+	// Add file name
+	link.download = "map.svg";
+
+	// Add click event to <a> tag to save file.
+	link.click();
+	URL.revokeObjectURL(link.href);
+}
+
 // Runs once all items are loaded
 
 document.addEventListener("DOMContentLoaded", function () {
