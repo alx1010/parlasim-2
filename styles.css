@@ -114,7 +114,7 @@ body {
 }
 
 #mr-box-bottom {
-	height: 60%;
+	height: 50%;
 	background-color: var(--box-colour);
 	display: flex;
 	justify-content: center;
