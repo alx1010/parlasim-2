@@ -43,7 +43,6 @@ body {
 	height: 40%;
 	padding: 1.5vh 1vw;
 	display: flex;
-	gap: 0.5vw;
 	align-items: center;
 	justify-content: space-between;
 	background-color: var(--box-colour);
@@ -166,7 +165,7 @@ body {
 
 #pv-table {
 	display: grid;
-	grid-template-columns: repeat(7, auto);
+	grid-template-columns: repeat(7, minmax(0, 1fr));
 	grid-template-rows: repeat(3, auto);
 	justify-items: center;
 	align-items: center;
