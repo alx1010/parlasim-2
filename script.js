@@ -699,6 +699,12 @@ function SaveMapAsImage() {
 function SaveMapAsSVG() {
 	var originalStroke = SVGMAP.getElementById(seats.id[0]).style.strokeWidth;
 
+	var v = SVGMAP.getElementById("viewport").getAttribute("transform");
+
+	var s = "matrix(1, 0, 0, 1, 0, 0)";
+
+	SVGMAP.getElementById("viewport").setAttribute("transform", s);
+
 	for (let x = 0; x < seats.id.length; x++) {
 		SVGMAP.getElementById(seats.id[x]).style.strokeWidth = "0.1px";
 	}
@@ -726,6 +732,8 @@ function SaveMapAsSVG() {
 	for (let x = 0; x < seats.id.length; x++) {
 		SVGMAP.getElementById(seats.id[x]).style.strokeWidth = originalStroke;
 	}
+
+	SVGMAP.getElementById("viewport").setAttribute("transform", v);
 }
 
 // Runs once all items are loaded
