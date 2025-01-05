@@ -322,8 +322,6 @@ function Swing(shiftArr) {
 		running += regions.seats[r];
 	}
 
-	console.log(shiftArr);
-
 	// janky fix for territories and their pv swing
 
 	var s = [];
@@ -365,8 +363,6 @@ function Swing(shiftArr) {
 	for (let p = 0; p < parties.abbreviation.length; p++) {
 		xvpv[p] = fourDecRound(vpv[p] / totalVotesAfterSwing);
 	}
-
-	console.log(xvpv);
 
 	findWinnerAndMargin();
 	ColourMap();
