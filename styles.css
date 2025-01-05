@@ -6,6 +6,21 @@
 	--box-colour: rgb(68, 68, 68);
 }
 
+@media all and (max-width: 500px) {
+	#content {
+		flex-wrap: wrap;
+	}
+	#wrapper-left {
+		flex-grow: 1;
+	}
+	#container-right {
+		flex-grow: 1;
+	}
+	p {
+		font-size: 20px;
+	}
+}
+
 p {
 	font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
@@ -65,9 +80,10 @@ body {
 
 #wrapper-left {
 	width: 50%;
-	padding: 1% 1%;
+	padding: 0.7vw;
 	display: flex;
 	flex-direction: column;
+	gap: 1vh;
 	justify-content: space-between;
 	border-style: dashed;
 	border-color: var(--border-colour);
@@ -76,8 +92,8 @@ body {
 }
 
 #wrapper-mid-right {
-	width: 30%;
-	padding: 1% 1%;
+	flex: 1;
+	padding: 0.7vw;
 	display: flex;
 	flex-direction: column;
 	border-style: dashed;
@@ -109,8 +125,7 @@ body {
 }
 
 #wrapper-right {
-	width: 15%;
-	padding: 1% 1%;
+	padding: 0.7vw;
 	display: flex;
 	flex-direction: column;
 	gap: 1vh;
