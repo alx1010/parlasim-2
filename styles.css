@@ -124,7 +124,7 @@ body {
 	background-color: var(--box-colour);
 	display: grid;
 	grid-template-columns: repeat(3, 33%);
-	grid-template-rows: repeat(7, auto);
+	grid-template-rows: repeat(8, 12.5%);
 	padding: 1% 5%;
 	box-sizing: border-box;
 	justify-items: center;

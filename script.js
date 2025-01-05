@@ -130,13 +130,21 @@ function InitializeSeatVoteText() {
 	}
 }
 
+var FlipInfo = document.getElementById("FlipInfo");
+
 function ClickSeat(click) {
 	document.getElementById("SeatName").innerText = seats.name[click];
 
 	CurrentlyClickedSeat = click;
 
-	for (let z = 0; z < parties.abbreviation.length; z++) {
-		seatVoteText[z].innerText = fourDecRound(vote_percent[parties.abbreviation[z]][click] * 100).toFixed(2) + "%";
+	for (let p = 0; p < parties.abbreviation.length; p++) {
+		seatVoteText[p].innerText = fourDecRound(vote_percent[parties.abbreviation[p]][click] * 100).toFixed(2) + "%";
+	}
+
+	if (initSeatWinner[click] == seatWinner[click]) {
+		FlipInfo.innerText = seatWinner[click].toUpperCase() + " Hold";
+	} else if (initSeatWinner[click] != seatWinner[click]) {
+		FlipInfo.innerText = initSeatWinner[click].toUpperCase() + " --> " + seatWinner[click].toUpperCase() + " Flip";
 	}
 }
 
