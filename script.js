@@ -639,6 +639,12 @@ function SetAccentColours() {
 function SaveMapAsImage() {
 	var originalStroke = SVGMAP.getElementById(seats.id[0]).style.strokeWidth;
 
+	var v = SVGMAP.getElementById("viewport").getAttribute("transform");
+
+	var s = "matrix(1, 0, 0, 1, 0, 0)";
+
+	SVGMAP.getElementById("viewport").setAttribute("transform", s);
+
 	for (let x = 0; x < seats.id.length; x++) {
 		SVGMAP.getElementById(seats.id[x]).style.strokeWidth = "0.1px";
 	}
@@ -657,10 +663,12 @@ function SaveMapAsImage() {
 		// draw the image on an ad-hoc canvas
 		const bbox = SVGMAP.getBBox();
 
-		console.log(bbox.x + " and " + bbox.y);
+		console.log(bbox.width + " and " + bbox.height);
 
-		const imgWidth = 798.05712 * 10;
-		const imgHeight = 686.06091 * 10;
+		var scalar = 10;
+
+		const imgWidth = 1019.0178833007812 * scalar;
+		const imgHeight = 875.9977416992188 * scalar;
 
 		const canvas = document.createElement("canvas");
 		canvas.width = imgWidth;
@@ -684,9 +692,17 @@ function SaveMapAsImage() {
 	for (let x = 0; x < seats.id.length; x++) {
 		SVGMAP.getElementById(seats.id[x]).style.strokeWidth = originalStroke;
 	}
+
+	SVGMAP.getElementById("viewport").setAttribute("transform", v);
 }
 
 function SaveMapAsSVG() {
+	var originalStroke = SVGMAP.getElementById(seats.id[0]).style.strokeWidth;
+
+	for (let x = 0; x < seats.id.length; x++) {
+		SVGMAP.getElementById(seats.id[x]).style.strokeWidth = "0.1px";
+	}
+
 	const data = new XMLSerializer().serializeToString(SVGMAP);
 
 	// Create element with <a> tag
@@ -706,6 +722,10 @@ function SaveMapAsSVG() {
 	// Add click event to <a> tag to save file.
 	link.click();
 	URL.revokeObjectURL(link.href);
+
+	for (let x = 0; x < seats.id.length; x++) {
+		SVGMAP.getElementById(seats.id[x]).style.strokeWidth = originalStroke;
+	}
 }
 
 // Runs once all items are loaded
