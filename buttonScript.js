@@ -2,6 +2,7 @@ const btnSim = document.getElementById("btnSim");
 
 const btnByShare = document.getElementById("btnByShare");
 const btnByMargin = document.getElementById("btnByMargin");
+const btnFlips = document.getElementById("btnFlips");
 const btnSolid = document.getElementById("btnSolid");
 
 const btnPartyStrength = document.getElementById("btnPartyStrength");
@@ -18,6 +19,11 @@ btnByShare.addEventListener("click", () => {
 
 btnByMargin.addEventListener("click", () => {
 	mapMode = 1;
+	ColourMap();
+});
+
+btnFlips.addEventListener("click", () => {
+	mapMode = 2;
 	ColourMap();
 });
 

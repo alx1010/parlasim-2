@@ -29,6 +29,8 @@ var parties = {
 var seatWinner = [];
 var seatMargin = [];
 
+var initSeatWinner = [];
+
 // arranged by order in data file
 // territories are set to use pv swing due to low regional data
 
@@ -410,7 +412,13 @@ function ColourMap() {
 		}
 	}
 	if (mapMode == 2) {
-		// todo, flips
+		for (let x = 0; x < seats.id.length; x++) {
+			if (initSeatWinner[x] == seatWinner[x]) {
+				fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, 3));
+			} else if (initSeatWinner[x] != seatWinner[x]) {
+				fillSeat(seats.id[x], colourStep(hex[seatWinner[x]], 10, -3));
+			}
+		}
 	}
 	if (mapMode == 3) {
 		for (let x = 0; x < seats.id.length; x++) {
@@ -636,6 +644,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		SVGMAP = svgDoc.documentElement;
 
 		findWinnerAndMargin();
+
+		initSeatWinner = seatWinner.slice(0);
 
 		DisplayNationalSeatCount();
 
