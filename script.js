@@ -364,6 +364,15 @@ function Swing(shiftArr) {
 		xvpv[p] = fourDecRound(vpv[p] / totalVotesAfterSwing);
 	}
 
+	for (let r = 0; r < regionsWithRegionalSwing; r++) {
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			var inputPointer = parties.abbreviation.length * r + p;
+			inputs[inputPointer].value = fourDecRound(fourDecRound(regionVotes[parties.abbreviation[p]][r] * shiftArr[inputPointer]) * 100).toFixed(2) + "%";
+		}
+	}
+
+	console.log(regionVotes);
+
 	findWinnerAndMargin();
 	ColourMap();
 
@@ -546,7 +555,6 @@ function GetShiftFromMOE(sel_p) {
 					);
 				}
 			}
-			inputs[inputPointer].value = fourDecRound(fourDecRound(regionVotes[parties.abbreviation[p]][r] * shiftArr[inputPointer]) * 100).toFixed(2) + "%";
 		}
 	}
 
