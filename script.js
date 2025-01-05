@@ -322,6 +322,8 @@ function Swing(shiftArr) {
 		running += regions.seats[r];
 	}
 
+	console.log(shiftArr);
+
 	// janky fix for territories and their pv swing
 
 	var s = [];
@@ -348,23 +350,23 @@ function Swing(shiftArr) {
 			v[p] = vote[parties.abbreviation[p]][x] * s[p];
 
 			sum += v[p];
+
+			vpv[p] += v[p];
 		}
 		for (let p = 0; p < parties.abbreviation.length; p++) {
 			vote_percent[parties.abbreviation[p]][x] = fourDecRound(v[p] / sum);
 		}
 	}
 
-	for (let x = 340; x < seats.id.length; x++) {
-		for (let p = 0; p < parties.abbreviation.length; p++) {
-			vpv[p] += v[p];
-		}
-	}
+	var totalVotesAfterSwing = vpv.reduce((a, b) => a + b, 0);
 
 	var xvpv = [];
 
 	for (let p = 0; p < parties.abbreviation.length; p++) {
-		xvpv[p] = fourDecRound(vpv[p] / vpv.reduce((a, b) => a + b, 0));
+		xvpv[p] = fourDecRound(vpv[p] / totalVotesAfterSwing);
 	}
+
+	console.log(xvpv);
 
 	findWinnerAndMargin();
 	ColourMap();
