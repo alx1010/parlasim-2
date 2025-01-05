@@ -7,6 +7,8 @@ const btnSolid = document.getElementById("btnSolid");
 
 const btnPartyStrength = document.getElementById("btnPartyStrength");
 
+const btnLatestElection = document.getElementById("btnLatestElection");
+
 const btnAverages = document.getElementById("btnAverages");
 
 const btnAdjustColours = document.getElementById("btnAdjustColours");
@@ -53,10 +55,24 @@ btnSim.addEventListener("click", () => {
 	Swing(shiftArr);
 });
 
+btnLatestElection.addEventListener("click", () => {
+	var shiftArr = [];
+
+	for (let r = 0; r < regionsWithRegionalSwing; r++) {
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			shiftArr[parties.abbreviation.length * r + p] = 1;
+		}
+	}
+
+	Swing(shiftArr);
+});
+
 btnAverages.addEventListener("click", () => {
 	var shiftArr = ScrapeIntoShift();
 	Swing(shiftArr);
 });
+
+// btn - parties.abbreviation - UpperMOE
 
 for (let p = 0; p < 3; p++) {
 	// only lpc, cpc and ndp considered for this

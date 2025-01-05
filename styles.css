@@ -155,7 +155,7 @@ body {
 	background-color: var(--box-colour);
 	display: grid;
 	grid-template-columns: repeat(2, auto);
-	grid-template-rows: repeat(11, auto);
+	grid-template-rows: repeat(12, auto);
 	padding: 1% 5%;
 	box-sizing: border-box;
 	align-items: center;
