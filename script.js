@@ -681,7 +681,7 @@ function SaveMapAsImage() {
 
 		// trigger a synthetic download operation with a temporary link
 		const a = document.createElement("a");
-		a.download = "image.png";
+		a.download = "ab-north-map.png";
 		document.body.appendChild(a);
 		a.href = canvas.toDataURL();
 		a.click();
@@ -717,7 +717,7 @@ function SaveMapAsSVG() {
 	link.href = URL.createObjectURL(svgBlob);
 
 	// Add file name
-	link.download = "map.svg";
+	link.download = "ab-north-map.svg";
 
 	// Add click event to <a> tag to save file.
 	link.click();
