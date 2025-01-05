@@ -92,7 +92,7 @@ body {
 }
 
 #wrapper-mid-right {
-	flex: 1;
+	width: 60%;
 	padding: 0.7vw;
 	display: flex;
 	flex-direction: column;
@@ -114,7 +114,7 @@ body {
 }
 
 #mr-box-bottom {
-	height: 50%;
+	height: 60%;
 	background-color: var(--box-colour);
 	display: flex;
 	justify-content: center;
@@ -125,6 +125,7 @@ body {
 }
 
 #wrapper-right {
+	width: 40%;
 	padding: 0.7vw;
 	display: flex;
 	flex-direction: column;
@@ -157,6 +158,7 @@ body {
 	padding: 1% 5%;
 	box-sizing: border-box;
 	align-items: center;
+	justify-items: center;
 	border-style: dashed;
 	border-color: var(--border-colour);
 }
@@ -213,7 +215,7 @@ body {
 }
 
 #input-table > input {
-	width: 60%;
+	width: 70%;
 	height: 25%;
 	font-size: 0.5vw;
 	background-color: rgb(88, 88, 88);
