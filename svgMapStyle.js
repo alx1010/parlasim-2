@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (dyanmicStrokeWidth < minStrokeWidth) {
 				seats[x].style.strokeWidth = minStrokeWidth * 2 + "px";
 			} else {
-				seats[x].style.strokeWidth = dyanmicStrokeWidth * 3 + "px";
+				seats[x].style.strokeWidth = dyanmicStrokeWidth * 2 + "px";
 			}
 		});
 

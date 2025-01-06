@@ -34,6 +34,10 @@ var rangeBottom = 0.2;
 
 var decrement = 0.05;
 
+// for png export
+// can be edited via console
+var scalar = 10;
+
 // Treating each section as a bucket helps visualize pieces
 
 var bucketNum = Math.round((rangeTop - rangeBottom) / decrement);

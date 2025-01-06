@@ -669,8 +669,6 @@ function SaveMapAsImage() {
 		// draw the image on an ad-hoc canvas
 		const bbox = SVGMAP.getBBox();
 
-		var scalar = 10;
-
 		const imgWidth = 1019.0178833007812 * scalar;
 		const imgHeight = 875.9977416992188 * scalar;
 
