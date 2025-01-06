@@ -140,9 +140,10 @@ body {
 	background-color: var(--box-colour);
 	display: grid;
 	grid-template-columns: repeat(3, 33%);
-	grid-template-rows: repeat(9, 11%);
+	grid-template-rows: 15% repeat(8, 10%);
 	padding: 1% 5%;
 	box-sizing: border-box;
+	align-items: center;
 	justify-items: center;
 	justify-content: space-between;
 	border-style: dashed;
@@ -233,6 +234,7 @@ body {
 	font-size: 0.8vw;
 	color: var(--font-colour);
 	text-align: center;
+	margin: 0 0;
 }
 
 .heading-text {
