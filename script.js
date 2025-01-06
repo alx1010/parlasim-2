@@ -158,16 +158,17 @@ function RefreshSeatClick() {
 // Beginning of Popular Vote Text setup
 
 var pv = [];
-
-for (let p = 0; p < parties.abbreviation.length; p++) {
-	pv[p] = vote[parties.abbreviation[p]].reduce((a, b) => a + b, 0);
-	pv[p] = fourDecRound(pv[p] / total_votes.reduce((a, b) => a + b, 0));
-}
-
 var pvText = document.getElementsByClassName("pvVote");
 
-for (let p = 0; p < parties.abbreviation.length; p++) {
-	pvText[p].innerText = fourDecRound(pv[p] * 100) + "%";
+function InitializePVText() {
+	for (let p = 0; p < parties.abbreviation.length; p++) {
+		pv[p] = vote[parties.abbreviation[p]].reduce((a, b) => a + b, 0);
+		pv[p] = fourDecRound(pv[p] / total_votes.reduce((a, b) => a + b, 0));
+	}
+
+	for (let p = 0; p < parties.abbreviation.length; p++) {
+		pvText[p].innerText = fourDecRound(pv[p] * 100).toFixed(2) + "%";
+	}
 }
 
 // National seat results setup
@@ -494,7 +495,7 @@ function RefreshRegionalSeats() {
 
 function RefreshPopularVoteCount(arr) {
 	for (let p = 0; p < parties.abbreviation.length; p++) {
-		pvText[p].innerText = fourDecRound(arr[p] * 100) + "%";
+		pvText[p].innerText = fourDecRound(arr[p] * 100).toFixed(2) + "%";
 	}
 }
 
@@ -764,6 +765,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		initSeatWinner = seatWinner.slice(0);
 
+		InitializePVText();
 		DisplayNationalSeatCount();
 
 		InitializeRegions();
