@@ -131,6 +131,7 @@ function InitializeSeatVoteText() {
 }
 
 var FlipInfo = document.getElementById("FlipInfo");
+var MarginInfo = document.getElementById("MarginInfo");
 
 function ClickSeat(click) {
 	document.getElementById("SeatName").innerText = seats.name[click];
@@ -146,6 +147,8 @@ function ClickSeat(click) {
 	} else if (initSeatWinner[click] != seatWinner[click]) {
 		FlipInfo.innerText = initSeatWinner[click].toUpperCase() + " --> " + seatWinner[click].toUpperCase() + " Flip";
 	}
+
+	MarginInfo.innerText = "Margin: " + fourDecRound(seatMargin[click] * 100).toFixed(2) + "%";
 }
 
 function RefreshSeatClick() {
