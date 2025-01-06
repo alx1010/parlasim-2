@@ -318,8 +318,6 @@ function Swing(shiftArr) {
 
 			for (let p = 0; p < parties.abbreviation.length; p++) {
 				vote_percent[parties.abbreviation[p]][x] = fourDecRound(v[p] / sum);
-
-				//console.log(vote_percent[parties.abbreviation[p]][x]);
 			}
 		}
 
@@ -374,8 +372,6 @@ function Swing(shiftArr) {
 			inputs[inputPointer].value = fourDecRound(fourDecRound(regionVotes[parties.abbreviation[p]][r] * shiftArr[inputPointer]) * 100).toFixed(2) + "%";
 		}
 	}
-
-	console.log(regionVotes);
 
 	findWinnerAndMargin();
 	ColourMap();
@@ -672,8 +668,6 @@ function SaveMapAsImage() {
 	img.addEventListener("load", () => {
 		// draw the image on an ad-hoc canvas
 		const bbox = SVGMAP.getBBox();
-
-		console.log(bbox.width + " and " + bbox.height);
 
 		var scalar = 10;
 
