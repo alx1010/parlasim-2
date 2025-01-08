@@ -9,6 +9,8 @@ const baseFill = "#8a8a8a";
 const baseStrokeColour = "black";
 const baseStrokeWidth = 0.5; // px
 
+const lakeFill = "#444444";
+
 const hoverFill = "#707070";
 
 const minStrokeWidth = 0.05; // px
@@ -23,6 +25,8 @@ var storedFill = "";
 document.addEventListener("DOMContentLoaded", function () {
 	seatGroup = document.getElementById("Seats"); // Group with seats must be named "Seats"
 	seats = seatGroup.querySelectorAll("path");
+
+	document.getElementById("Lakes").querySelectorAll("path")[0].style.fill = lakeFill;
 
 	for (let x = 0; x < seats.length; x++) {
 		seats[x].style.fill = baseFill;

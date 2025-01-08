@@ -651,6 +651,8 @@ function SaveMapAsImage() {
 
 	SVGMAP.getElementById("viewport").setAttribute("transform", s);
 
+	SVGMAP.getElementById("Lakes").querySelectorAll("path")[0].style.fill = "white";
+
 	for (let x = 0; x < seats.id.length; x++) {
 		SVGMAP.getElementById(seats.id[x]).style.strokeWidth = "0.1px";
 	}
@@ -696,6 +698,8 @@ function SaveMapAsImage() {
 	}
 
 	SVGMAP.getElementById("viewport").setAttribute("transform", v);
+
+	SVGMAP.getElementById("Lakes").querySelectorAll("path")[0].style.fill = "#444444";
 }
 
 function SaveMapAsSVG() {
@@ -706,6 +710,8 @@ function SaveMapAsSVG() {
 	var s = "matrix(1, 0, 0, 1, 0, 0)";
 
 	SVGMAP.getElementById("viewport").setAttribute("transform", s);
+
+	SVGMAP.getElementById("Lakes").querySelectorAll("path")[0].style.fill = "white";
 
 	for (let x = 0; x < seats.id.length; x++) {
 		SVGMAP.getElementById(seats.id[x]).style.strokeWidth = "0.1px";
@@ -736,6 +742,8 @@ function SaveMapAsSVG() {
 	}
 
 	SVGMAP.getElementById("viewport").setAttribute("transform", v);
+
+	SVGMAP.getElementById("Lakes").querySelectorAll("path")[0].style.fill = "#444444";
 }
 
 // Runs once all items are loaded
