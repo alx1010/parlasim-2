@@ -746,6 +746,22 @@ function SaveMapAsSVG() {
 	SVGMAP.getElementById("Lakes").querySelectorAll("path")[0].style.fill = "#444444";
 }
 
+function SaveDataAsJSON() {
+	var outputJSON = {};
+	for (let x = 0; x < 343; x++) {
+		outputJSON["seat" + (x + 1)] = {};
+		outputJSON["seat" + (x + 1)]["name"] = seats.name[x];
+		outputJSON["seat" + (x + 1)]["id"] = seats.id[x];
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			outputJSON["seat" + (x + 1)][parties.abbreviation[p]] = {};
+			outputJSON["seat" + (x + 1)][parties.abbreviation[p]]["vote_percent"] = vote_percent[parties.abbreviation[p]][x];
+		}
+	}
+
+	console.log(outputJSON);
+	SaveFile(JSON.stringify(outputJSON), "output.json");
+}
+
 // Runs once all items are loaded
 
 document.addEventListener("DOMContentLoaded", function () {
