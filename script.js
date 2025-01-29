@@ -748,13 +748,26 @@ function SaveMapAsSVG() {
 
 function SaveDataAsJSON() {
 	var outputJSON = {};
-	for (let x = 0; x < 343; x++) {
-		outputJSON["seat" + (x + 1)] = {};
-		outputJSON["seat" + (x + 1)]["name"] = seats.name[x];
-		outputJSON["seat" + (x + 1)]["id"] = seats.id[x];
+
+	outputJSON["regions"] = {};
+
+	outputJSON["seats"] = {};
+
+	for (let r = 0; r < 343; r++) {
+		outputJSON["regions"][regions.name[r]] = {};
 		for (let p = 0; p < parties.abbreviation.length; p++) {
-			outputJSON["seat" + (x + 1)][parties.abbreviation[p]] = {};
-			outputJSON["seat" + (x + 1)][parties.abbreviation[p]]["vote_percent"] = vote_percent[parties.abbreviation[p]][x];
+			outputJSON["regions"][regions.name[r]][parties.abbreviation[p]] = {};
+			outputJSON["regions"][regions.name[r]][parties.abbreviation[p]]["vote_percent"] = regionVotes[parties.abbreviation[p]][r];
+			outputJSON["regions"][regions.name[r]][parties.abbreviation[p]]["seats"] = regionSeats[parties.abbreviation[p]][r];
+		}
+	}
+	for (let x = 0; x < 343; x++) {
+		outputJSON["seats"]["seat" + (x + 1)] = {};
+		outputJSON["seats"]["seat" + (x + 1)]["name"] = seats.name[x];
+		outputJSON["seats"]["seat" + (x + 1)]["id"] = seats.id[x];
+		for (let p = 0; p < parties.abbreviation.length; p++) {
+			outputJSON["seats"]["seat" + (x + 1)][parties.abbreviation[p]] = {};
+			outputJSON["seats"]["seat" + (x + 1)][parties.abbreviation[p]]["vote_percent"] = vote_percent[parties.abbreviation[p]][x];
 		}
 	}
 
