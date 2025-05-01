@@ -1,6 +1,6 @@
 // Initial setup, reading data and parsing
 
-var electionDataRaw = readFile("electionData.csv").split("\r").join("").split("\n").join(",").split(",");
+var electionDataRaw = readFile("2025Results.csv").split("\r").join("").split("\n").join(",").split(",");
 
 var seats = { name: [], id: [] };
 
@@ -71,17 +71,19 @@ for (let y = 0; y < parties.abbreviation.length; y++) {
 
 // 11 columns, removes header line
 
-electionDataRaw = electionDataRaw.slice(11, electionDataRaw.length);
+electionDataRaw = electionDataRaw.slice(10, electionDataRaw.length);
 
-for (let x = 0; x < electionDataRaw.length / 11; x++) {
-	seats.name[x] = electionDataRaw[0 + x * 11];
-	seats.id[x] = electionDataRaw[1 + x * 11];
+console.log(electionDataRaw);
+
+for (let x = 0; x < electionDataRaw.length / 10; x++) {
+	seats.name[x] = electionDataRaw[0 + x * 10];
+	seats.id[x] = electionDataRaw[1 + x * 10];
 
 	for (let y = 0; y < parties.abbreviation.length; y++) {
-		vote[parties.abbreviation[y]][x] = parseInt(electionDataRaw[2 + y + x * 11]);
+		vote[parties.abbreviation[y]][x] = parseInt(electionDataRaw[2 + y + x * 10]);
 	}
 
-	total_votes[x] = parseInt(electionDataRaw[9 + x * 11]);
+	total_votes[x] = parseInt(electionDataRaw[9 + x * 10]);
 }
 
 // Creates initial vote percent object using inital raw votes
@@ -802,6 +804,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		InitializeHexStorage();
 
 		SetAccentColours();
+
+		console.log(seats.id);
 
 		ColourMap();
 
