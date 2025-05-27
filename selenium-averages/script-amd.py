@@ -49,7 +49,7 @@ def getValues():
     
     return values
 
-baseUrl = 'https://canadianpolling.ca/Canada-$$-2021'
+baseUrl = 'https://canadianpolling.ca/Canada-$$-2025'
 
 class regions:
     name = ['BC', 'AB', 'SKMB', 'ON', 'QC', 'ATL']
